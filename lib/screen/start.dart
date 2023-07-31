@@ -57,7 +57,7 @@ class _StartScreenState extends State<StartScreen> {
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
                 ),

@@ -1,3 +1,5 @@
+import 'package:firstapp/screen/first_setup.dart';
+import 'package:firstapp/screen/register.dart';
 import 'package:firstapp/screen/start.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const StartScreen(),
+      home: const FirstSetup(),
     );
   }
 }

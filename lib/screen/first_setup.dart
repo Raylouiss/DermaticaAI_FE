@@ -24,25 +24,13 @@ class _FirstSetupState extends State<FirstSetup> {
         child: Column(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height * 0.15,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
+              height: MediaQuery.of(context).size.height * 0.35,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Image.asset("assets/register.png"),
-              ),
-            ),
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Align(
-                  alignment : Alignment.topCenter,
-                  child : Divider(
-                    color: Colors.white,
-                    thickness: 3,
-                  )
-                )
+                child: Image.asset("assets/firstSetup.png"),
               ),
             ),
             Container(
