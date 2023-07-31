@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/Login.dart';
 import 'package:firstapp/screen/first_setup.dart';
 import 'package:firstapp/screen/register.dart';
 import 'package:firstapp/screen/start.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const FirstSetup(),
+      home: const Login(),
     );
   }
 }

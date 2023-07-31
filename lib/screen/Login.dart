@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 
 import '../component/bottom_nav.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterState extends State<Register> {
+class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +38,7 @@ class _RegisterState extends State<Register> {
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.35,
-                        child: Image.asset("assets/register.png"),
+                        child: Image.asset("assets/login.png"),
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.03,
@@ -125,7 +124,7 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           child: const Text(
-                            'Sign Up',
+                            'Login',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
