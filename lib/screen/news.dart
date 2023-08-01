@@ -12,7 +12,10 @@ class _NewsState extends State<News> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('News')),
+      appBar: AppBar(
+          title: Text('News'),
+          backgroundColor: Color(0xFF5F9EA0),
+      ),
       body: Center(
           child: Text("News Screen", style : TextStyle(fontSize: 40))
       ),
