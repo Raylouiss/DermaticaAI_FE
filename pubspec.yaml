@@ -66,6 +66,8 @@ flutter:
      - assets/register.png
      - assets/firstSetup.png
      - assets/login.png
+     - assets/dashboard_sdr.png
+     - assets/dashboard_aichatbot.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
