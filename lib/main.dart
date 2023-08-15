@@ -3,6 +3,7 @@ import 'package:firstapp/screen/Login.dart';
 import 'package:firstapp/screen/dashboard.dart';
 import 'package:firstapp/screen/first_setup.dart';
 import 'package:firstapp/screen/home.dart';
+import 'package:firstapp/screen/how_to_use.dart';
 import 'package:firstapp/screen/register.dart';
 import 'package:firstapp/screen/start.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const Home(),
+      home: const HowToUse(),
     );
   }
 }

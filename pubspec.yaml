@@ -68,6 +68,14 @@ flutter:
      - assets/login.png
      - assets/dashboard_sdr.png
      - assets/dashboard_aichatbot.png
+     - assets/htu1.png
+     - assets/htu2.png
+     - assets/htu3.png
+     - assets/htu4.png
+     - assets/htu5.png
+     - assets/htu6.png
+     - assets/htu7.png
+     - assets/htu8.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
