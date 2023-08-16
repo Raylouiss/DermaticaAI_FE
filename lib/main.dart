@@ -8,6 +8,7 @@ import 'package:firstapp/screen/how_to_use.dart';
 import 'package:firstapp/screen/list_of_articles.dart';
 import 'package:firstapp/screen/register.dart';
 import 'package:firstapp/screen/start.dart';
+import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const Article(),
+      home: const Support(),
     );
   }
 }

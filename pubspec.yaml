@@ -76,6 +76,7 @@ flutter:
      - assets/htu6.png
      - assets/htu7.png
      - assets/htu8.png
+     - assets/support.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
