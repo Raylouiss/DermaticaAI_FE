@@ -46,8 +46,8 @@ class _SupportState extends State<Support> {
                 width: screenWidth,
                 height: 0.3 * screenHeight,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200], // Set background color of the Container
-                  borderRadius: BorderRadius.circular(10.0), // Set border radius of the Container
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: TextField(
                   decoration: InputDecoration(

@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/list_of_articles.dart';
 import 'package:firstapp/screen/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _HomeState extends State<Home> {
   final List<Widget> screens = [
     Dashboard(),
     History(),
-    News(),
+    ListOfArticles(),
     Profile(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
