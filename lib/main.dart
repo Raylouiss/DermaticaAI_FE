@@ -1,5 +1,6 @@
 import 'package:firstapp/component/footer.dart';
 import 'package:firstapp/screen/Login.dart';
+import 'package:firstapp/screen/article.dart';
 import 'package:firstapp/screen/dashboard.dart';
 import 'package:firstapp/screen/first_setup.dart';
 import 'package:firstapp/screen/home.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const ListOfArticles(),
+      home: const Article(),
     );
   }
 }
