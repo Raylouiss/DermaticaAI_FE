@@ -80,6 +80,14 @@ flutter:
      - assets/htu8.png
      - assets/support.png
      - assets/scanner.png
+     - assets/res_danger.png
+     - assets/res_medium.png
+     - assets/res_safe.png
+     - assets/res_zero.png
+     - assets/res_consult.png
+     - assets/res_danger_icon.png
+     - assets/res_medium_icon.png
+     - assets/res_safe_icon.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
