@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'dashboard.dart';
 import 'history.dart';
-import 'news.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

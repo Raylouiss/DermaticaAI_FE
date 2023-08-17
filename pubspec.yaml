@@ -88,6 +88,14 @@ flutter:
      - assets/res_danger_icon.png
      - assets/res_medium_icon.png
      - assets/res_safe_icon.png
+     - assets/profile.png
+     - assets/profile_email.png
+     - assets/profile_faq.png
+     - assets/profile_howtouse.png
+     - assets/profile_logout.png
+     - assets/profile_notifications.png
+     - assets/profile_support.png
+     - assets/profile_username.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
