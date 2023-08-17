@@ -4,6 +4,7 @@ import 'package:firstapp/screen/article.dart';
 import 'package:firstapp/screen/camera.dart';
 import 'package:firstapp/screen/dashboard.dart';
 import 'package:firstapp/screen/first_setup.dart';
+import 'package:firstapp/screen/history.dart';
 import 'package:firstapp/screen/home.dart';
 import 'package:firstapp/screen/how_to_use.dart';
 import 'package:firstapp/screen/list_of_articles.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const Result(),
+      home: const History(),
     );
   }
 }

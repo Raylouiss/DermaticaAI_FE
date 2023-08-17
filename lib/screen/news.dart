@@ -13,8 +13,12 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('News'),
-          backgroundColor: Color(0xFF5F9EA0),
+        backgroundColor: Color(0xFF5F93A0),
+        title: Text(
+          'List Of Articles',
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
       ),
       body: Center(
           child: Text("News Screen", style : TextStyle(fontSize: 40))
