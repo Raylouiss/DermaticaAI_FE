@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';  // <-- Added for random selection
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ class _ListOfArticlesState extends State<ListOfArticles> {
   late Future<List<Map<String, dynamic>>> newsDataFuture;
 
   int pageNo = 0;
+
   Future<List<Map<String, dynamic>>> fetchNews() async {
     final apiKey = '2e2fc648ec25454182773362fcdd7db5';
     final apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=$apiKey';
@@ -32,10 +34,11 @@ class _ListOfArticlesState extends State<ListOfArticles> {
 
   @override
   void initState() {
+    super.initState();
     pageController = PageController(initialPage: 2, viewportFraction: 0.85);
     newsDataFuture = fetchNews();
-    super.initState();
   }
+
   String formatDate(DateTime date) {
     return DateFormat('dd MMMM yyyy').format(date);
   }
@@ -45,7 +48,6 @@ class _ListOfArticlesState extends State<ListOfArticles> {
     pageController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,29 +76,124 @@ class _ListOfArticlesState extends State<ListOfArticles> {
               ),
             ),
             SizedBox(
-              height: 200,
-              child: PageView.builder(
-                controller: pageController,
-                onPageChanged: (index) {
-                  pageNo = index;
-                  setState(() {});
+              height: 250,
+              child:
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: newsDataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No news data available.');
+                  } else {
+                    final newsData = snapshot.data!;
+
+                    // Filter articles with valid images
+                    final validArticles = newsData.where((article) {
+                      return article['urlToImage'] != null && article['urlToImage'].isNotEmpty;
+                    }).toList();
+
+                    // Shuffle and select 5 random articles
+                    validArticles.shuffle();
+                    final selectedArticles = validArticles.take(5).toList();
+
+                    return PageView.builder(
+                      controller: pageController,
+                      onPageChanged: (index) {
+                        pageNo = index;
+                        setState(() {});
+                      },
+                      itemBuilder: (_, index) {
+                        final article = selectedArticles[index % selectedArticles.length];
+                        return AnimatedBuilder(
+                          animation: pageController,
+                          builder: (ctx, child) {
+                            return child!;
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 5,
+                                  offset: Offset(0,3),
+                                )
+                              ]
+                            ),
+                            child: Column(
+                              children: [
+                                if (article['urlToImage'] != null && article['urlToImage'].isNotEmpty)
+                                  Container(
+                                    padding: EdgeInsets.only(left: 16, top: 16, right: 16),
+                                    height: 150,
+                                    width: double.infinity,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.network(
+                                        article['urlToImage']!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                Flexible(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(left: 12, top: 10, right: 12),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Text(
+                                                article['title'],
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            IconButton(  // <-- Add an IconButton for the bookmark action
+                                              icon: Icon(Icons.bookmark_border),  // <-- Change this to Icons.bookmark if the article is bookmarked
+                                              onPressed: () {
+                                                // TODO: Add your bookmarking logic here
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 12, top : 5),
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          formatDate(DateTime.parse(article['publishedAt'])),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10,
+                                            color: Colors.black
+                                          ),
+                                        ),
+                                      ),
+                                    ]
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: selectedArticles.length,
+                    );
+                  }
                 },
-                itemBuilder: (_, index) {
-                  return AnimatedBuilder(
-                    animation: pageController,
-                    builder: (ctx, child) {
-                      return child!;
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        color: Color(0xFF5F93A0),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: 5,
               ),
             ),
             const SizedBox(
@@ -131,7 +228,7 @@ class _ListOfArticlesState extends State<ListOfArticles> {
             ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: fetchNews(),
+                future: newsDataFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
