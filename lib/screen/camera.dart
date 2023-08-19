@@ -73,6 +73,23 @@ class _CameraState extends State<Camera> {
             textAlign: TextAlign.center,
           ),
           centerTitle: true,
+          leading: IconButton(
+            icon: Row(
+              children: [
+                Icon(Icons.arrow_back, color: Colors.black,),
+                Text('Back',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          leadingWidth: 90,
         ),
         body: Stack(
           children: [

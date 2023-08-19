@@ -13,10 +13,10 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF5F93A0), // Set the app bar color to #5F93A0
+        backgroundColor: Color(0xFF5F93A0),
         title: Text(
           'How to Use',
-          textAlign: TextAlign.center, // Align the title to center
+          textAlign: TextAlign.center,
         ),
         centerTitle: true, // Center align the title
       ),

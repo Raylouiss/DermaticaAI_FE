@@ -20,6 +20,23 @@ class _ScannerDescState extends State<ScannerDesc> {
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Row(
+            children: [
+              Icon(Icons.arrow_back, color: Colors.black,),
+              Text('Back',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+            ],
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        leadingWidth: 90,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),

@@ -12,14 +12,31 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF5F93A0),
-        title: Text(
-          'Profile',
-          textAlign: TextAlign.center,
+        appBar: AppBar(
+          backgroundColor: Color(0xFF5F93A0),
+          title: Text(
+            'Profile',
+            textAlign: TextAlign.center,
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Row(
+              children: [
+                Icon(Icons.arrow_back, color: Colors.black,),
+                Text('Back',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          leadingWidth: 90,
         ),
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
