@@ -1,4 +1,8 @@
+import 'package:firstapp/screen/how_to_use.dart';
+import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
+
+import 'Login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -188,7 +192,10 @@ class _ProfileState extends State<Profile> {
                           IconButton(
                             icon: Icon(Icons.chevron_right, size: 20),
                             onPressed: () {
-                              // Your action here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => HowToUse()),
+                              );
                             },
                           )
                         ],
@@ -238,7 +245,10 @@ class _ProfileState extends State<Profile> {
                         children: [IconButton(
                           icon: Icon(Icons.chevron_right, size: 20),
                           onPressed: () {
-                            // Your action here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Support()),
+                            );
                           },
                         )
                         ],
@@ -263,7 +273,10 @@ class _ProfileState extends State<Profile> {
                         children: [IconButton(
                           icon: Icon(Icons.chevron_right, size: 20),
                           onPressed: () {
-                            // Your action here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
                           },
                         )
                         ],
