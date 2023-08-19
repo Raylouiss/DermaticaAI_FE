@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,10 @@ class _FirstSetupState extends State<FirstSetup> {
             ),
             GestureDetector(
               onTap: () {
-                print('Text clicked');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                );
               },
               child: Text(
                 'Click to continue...',

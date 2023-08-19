@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/first_setup.dart';
 import 'package:firstapp/screen/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _StartScreenState extends State<StartScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Register()),
+                    MaterialPageRoute(builder: (context) => FirstSetup()),
                   );
                 },
                 style: ButtonStyle(
@@ -143,14 +144,14 @@ class _StartScreenState extends State<StartScreen> {
                       child: Image.asset('assets/google_logo.png'),
                     ),
                     SizedBox(width: 10),
-                    Flexible( // This will handle the overflow
+                    Flexible(
                       child: Text(
                         'Sign in with Google',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,
                         ),
-                        overflow: TextOverflow.ellipsis, // This will add ellipsis if text is too long
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
