@@ -17,7 +17,7 @@ class _ListOfArticlesState extends State<ListOfArticles> {
   late final PageController pageController;
   late Future<List<Map<String, dynamic>>> newsDataFuture;
 
-  int pageNo = 0;
+  int pageNo = 2;
 
   Future<List<Map<String, dynamic>>> fetchNews() async {
     final apiKey = '2e2fc648ec25454182773362fcdd7db5';
