@@ -1,8 +1,11 @@
 import 'dart:convert';
-import 'dart:math';  // <-- Added for random selection
+import 'dart:math';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'article.dart';
 
 class ListOfArticles extends StatefulWidget {
   const ListOfArticles({super.key});
@@ -19,8 +22,7 @@ class _ListOfArticlesState extends State<ListOfArticles> {
 
   Future<List<Map<String, dynamic>>> fetchNews() async {
     final apiKey = '2e2fc648ec25454182773362fcdd7db5';
-    final apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=$apiKey';
-
+    final apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=$apiKey';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
@@ -145,29 +147,38 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                                 Flexible(
                                   child: Column(
                                     children: [
-                                      Container(
-                                        padding: EdgeInsets.only(left: 12, top: 10, right: 12),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text(
-                                                article['title'],
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          if (await canLaunch(article['url'])) {
+                                            await launch(article['url']);
+                                          } else {
+                                            print('Could not launch ${article['url']}');
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 12, top: 10, right: 12),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text(
+                                                  article['title'],
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            IconButton(  // <-- Add an IconButton for the bookmark action
-                                              icon: Icon(Icons.bookmark_border),  // <-- Change this to Icons.bookmark if the article is bookmarked
-                                              onPressed: () {
-                                                // TODO: Add your bookmarking logic here
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                icon: Icon(Icons.bookmark_border),
+                                                onPressed: () {
+                                                  // TODO: Add your bookmarking logic here
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       Container(
@@ -264,48 +275,59 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                       itemCount: newsData.length,
                       itemBuilder: (context, index) {
                         final article = newsData[index];
-                        return Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: article['urlToImage'] != null && article['urlToImage'].isNotEmpty
-                                  ? Image.network(
-                                article['urlToImage']!,
-                                width: 120,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              )
-                                  : Container(
-                                width: 120,
-                                height: 80,
-                                color: Colors.grey, // Placeholder color
-                                child: Icon(Icons.image, color: Colors.white), // Placeholder icon
+                        return InkWell(
+                          onTap: () async {
+                            if (await canLaunch(article['url'])) {
+                              await launch(article['url']);
+                            } else {
+                              print('Could not launch ${article['url']}');
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(24),
+                                child: article['urlToImage'] != null && article['urlToImage'].isNotEmpty
+                                    ? Image.network(
+                                  article['urlToImage']!,
+                                  width: 120,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                )
+                                    : Container(
+                                  width: 120,
+                                  height: 80,
+                                  color: Colors.grey, // Placeholder color
+                                  child: Icon(Icons.image, color: Colors.white), // Placeholder icon
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    formatDate(DateTime.parse(article['publishedAt'])),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      formatDate(DateTime.parse(article['publishedAt'])),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 10,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    article['title'],
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                    Text(
+                                      article['title'],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         );
                       },
                     );

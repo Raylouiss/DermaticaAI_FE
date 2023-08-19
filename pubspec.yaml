@@ -40,6 +40,7 @@ dependencies:
   avatars : ^3.0.2
   http: ^1.1.0
   intl: ^0.18.1
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
