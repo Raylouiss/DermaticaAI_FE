@@ -149,8 +149,13 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                                     children: [
                                       GestureDetector(
                                         onTap: () async {
-                                          if (await canLaunch(article['url'])) {
-                                            await launch(article['url']);
+                                          if (!await canLaunch(article['url'])) {
+                                            await launch(
+                                              article['url'],
+                                              forceSafariVC: false,
+                                              forceWebView: false,
+                                              headers: <String, String>{'my_header_key': 'my_header_value'},
+                                            );
                                           } else {
                                             print('Could not launch ${article['url']}');
                                           }
@@ -277,8 +282,13 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                         final article = newsData[index];
                         return InkWell(
                           onTap: () async {
-                            if (await canLaunch(article['url'])) {
-                              await launch(article['url']);
+                            if (!await canLaunch(article['url'])) {
+                              await launch(
+                                  article['url'],
+                                  forceSafariVC: false,
+                                  forceWebView: false,
+                                  headers: <String, String>{'my_header_key': 'my_header_value'},
+                              );
                             } else {
                               print('Could not launch ${article['url']}');
                             }
