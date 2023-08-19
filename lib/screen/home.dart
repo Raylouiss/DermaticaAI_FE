@@ -26,9 +26,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
+      body: SafeArea(
+        child: PageStorage(
+          child: currentScreen,
+          bucket: bucket,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF5F9EA0),

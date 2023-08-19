@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/list_of_chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -64,11 +65,14 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10), // space between the buttons
+                    SizedBox(width: 10),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Do something when the second button is pressed
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ListOfChat()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

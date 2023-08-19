@@ -1,7 +1,9 @@
+import 'package:firstapp/screen/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../component/bottom_nav.dart';
+import 'Login.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -50,14 +52,19 @@ class _StartScreenState extends State<StartScreen> {
               width: MediaQuery.of(context).size.width*0.5,
               height: MediaQuery.of(context).size.height*0.06,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Register()),
+                  );
+                },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(Size(0, 50)),
                   backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF008080)),
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
                 ),
@@ -77,7 +84,12 @@ class _StartScreenState extends State<StartScreen> {
               width: MediaQuery.of(context).size.width*0.5,
               height: MediaQuery.of(context).size.height*0.06,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(Size(0, 50)),
                   backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -109,8 +121,8 @@ class _StartScreenState extends State<StartScreen> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width*0.5,
-              height: MediaQuery.of(context).size.height*0.06,
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.height * 0.06,
               child: ElevatedButton(
                 onPressed: () {},
                 style: ButtonStyle(
@@ -123,12 +135,25 @@ class _StartScreenState extends State<StartScreen> {
                     ),
                   ),
                 ),
-                child: const Text(
-                  'Sign in with Google',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15.0,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.03,
+                      child: Image.asset('assets/google_logo.png'),
+                    ),
+                    SizedBox(width: 10),
+                    Flexible( // This will handle the overflow
+                      child: Text(
+                        'Sign in with Google',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15.0,
+                        ),
+                        overflow: TextOverflow.ellipsis, // This will add ellipsis if text is too long
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

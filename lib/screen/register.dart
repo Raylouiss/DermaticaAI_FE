@@ -1,3 +1,4 @@
+import 'package:firstapp/screen/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -113,6 +114,11 @@ class _RegisterState extends State<Register> {
                             String password = _passwordController.text;
                             print("Username: $username");
                             print("Password: $password");
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );
                           },
                           style: ButtonStyle(
                             minimumSize: MaterialStateProperty.all<Size>(Size(0, 50)),

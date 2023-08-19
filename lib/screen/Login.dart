@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../component/bottom_nav.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -112,6 +113,10 @@ class _LoginState extends State<Login> {
                             String password = _passwordController.text;
                             print("Username: $username");
                             print("Password: $password");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );
                           },
                           style: ButtonStyle(
                             minimumSize: MaterialStateProperty.all<Size>(Size(0, 50)),
