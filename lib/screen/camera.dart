@@ -3,7 +3,10 @@ import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Camera extends StatefulWidget {
-  const Camera({super.key});
+  final int currentTab;
+  final Function(int) onTabChanged;
+
+  const Camera({required this.currentTab, required this.onTabChanged, super.key});
 
   @override
   State<Camera> createState() => _CameraState();
@@ -51,7 +54,7 @@ class _CameraState extends State<Camera> {
   void toggleFlash() {
     setState(() {
       if (flashMode == FlashMode.off) {
-        flashMode = FlashMode.torch; // Changed from FlashMode.on to FlashMode.torch
+        flashMode = FlashMode.torch;
       } else {
         flashMode = FlashMode.off;
       }
@@ -103,30 +106,84 @@ class _CameraState extends State<Camera> {
             ),
             GestureDetector(
               onTap: () {
-                cameraController.takePicture().then((XFile? file) {
-                  if (mounted) {
-                    if (file != null) {
-                      print("Picture saved to ${file.path}");
-                    }
-                  }
-                });
-              },
-              child: button(Icons.camera_alt_outlined, Alignment.bottomCenter),
-            ),
-            GestureDetector(
-              onTap: () {
                 pickImageFromGallery();
               },
               child: button(Icons.photo_library, Alignment.bottomRight),
             ),
           ],
         ),
+        bottomNavigationBar: buildBottomNavBar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xFF5F9EA0),
+          child: Icon(Icons.camera_alt_rounded, color: Colors.black),
+          onPressed: () {
+            cameraController.takePicture().then((XFile? file) {
+              if (mounted) {
+                if (file != null) {
+                  print("Picture saved to ${file.path}");
+                }
+              }
+            });
+          },
+        ),
       );
     } catch (e) {
       return const SizedBox();
     }
   }
+  BottomAppBar buildBottomNavBar() {
+    return BottomAppBar(
+      color: Color(0xFF008080),
+      shape: CircularNotchedRectangle(),
+      notchMargin: 10,
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildNavBarItem(Icons.home, 0),
+                buildNavBarItem(Icons.history, 1),
+              ],
+            ),
+            Row (
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildNavBarItem(Icons.newspaper, 2),
+                buildNavBarItem(Icons.person, 3),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  Widget buildNavBarItem(IconData icon, int index) {
+    bool isSelected = widget.currentTab == index;
+    return MaterialButton(
+      minWidth: 40,
+      onPressed: () {
+        widget.onTabChanged(index);
+        Navigator.pop(context);
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isSelected ? Color(0xFF5F9EA0) : Colors.transparent,
+        ),
+        child: Icon(
+          icon,
+          // color: isSelected ? Colors.black : Colors.grey,
+        ),
+      ),
+    );
+  }
   Widget flashButton() {
     return GestureDetector(
       onTap: toggleFlash,

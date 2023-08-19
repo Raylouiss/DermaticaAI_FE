@@ -85,7 +85,11 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5,
+                        color: Color(0xFF5F93A0),
+                        backgroundColor: Colors.grey,
+                      ),
                     );
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
