@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
+import 'camera.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -81,7 +83,10 @@ class _DashboardState extends State<Dashboard> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Do something when the first button is pressed
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Camera(currentTab: 4, onTabChanged: (int ) {  },)),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

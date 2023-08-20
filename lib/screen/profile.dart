@@ -3,6 +3,7 @@ import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
 
 import 'Login.dart';
+import 'faq.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -107,17 +108,17 @@ class _ProfileState extends State<Profile> {
                           Text('Email'),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text('abcd@gmail.com'),
-                          IconButton(
-                            icon: Icon(Icons.chevron_right, size: 20),
-                            onPressed: () {
-                              // Your action here
-                            },
-                          )
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Text('abcd@gmail.com'),
+                      //     IconButton(
+                      //       icon: Icon(Icons.chevron_right, size: 20),
+                      //       onPressed: () {
+                      //         // Your action here
+                      //       },
+                      //     )
+                      //   ],
+                      // ),
                     ],
                   ),
                 ],
@@ -220,7 +221,10 @@ class _ProfileState extends State<Profile> {
                         children: [IconButton(
                             icon: Icon(Icons.chevron_right, size: 20),
                             onPressed: () {
-                              // Your action here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FAQ()),
+                              );
                             },
                           )
                         ],

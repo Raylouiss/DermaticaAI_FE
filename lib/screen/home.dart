@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Camera(currentTab: currentTab, onTabChanged: (index) => setState(() => currentTab = index))),
+            MaterialPageRoute(builder: (context) => Camera(currentTab: 4, onTabChanged: (index) => setState(() => currentTab = index))),
           );
         },
       ),
