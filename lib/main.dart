@@ -18,11 +18,17 @@ import 'package:firstapp/screen/splash_screen.dart';
 import 'package:firstapp/screen/start.dart';
 import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserCredentialProvider(),
+      child: MyApp(),
+    ),
+  );
   await Firebase.initializeApp();
 }
 

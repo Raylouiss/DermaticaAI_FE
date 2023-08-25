@@ -4,10 +4,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import '../component/bottom_nav.dart';
 import 'Login.dart';
 import 'home.dart';
+
+class UserCredentialProvider extends ChangeNotifier {
+  UserCredential? _userCredential;
+
+  UserCredential? get userCredential => _userCredential;
+
+  void setUserCredential(UserCredential credential) {
+    _userCredential = credential;
+    notifyListeners();
+  }
+}
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -152,6 +164,7 @@ class _StartScreenState extends State<StartScreen> {
                     UserCredential userCredential = await signInWithGoogle();
                     //print user info
                     print("User Info: ${userCredential.user}");
+                    Provider.of<UserCredentialProvider>(context, listen: false).setUserCredential(userCredential);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Home()),

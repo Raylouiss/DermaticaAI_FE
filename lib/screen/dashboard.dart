@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:firstapp/screen/start.dart';
 
 import 'camera.dart';
 
@@ -54,6 +56,8 @@ class _DashboardState extends State<Dashboard> {
   }
   @override
   Widget build(BuildContext context) {
+    final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
+    final name = userCredential!.user!.displayName;
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -67,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
                     padding: const EdgeInsets.all(35),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("Hello, Willson",
+                      child: Text("Hello, $name!",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold
