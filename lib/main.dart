@@ -19,8 +19,11 @@ import 'package:firstapp/screen/start.dart';
 import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp();
 }
 
 class MyApp extends StatelessWidget {

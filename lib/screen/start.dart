@@ -2,9 +2,12 @@ import 'package:firstapp/screen/first_setup.dart';
 import 'package:firstapp/screen/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../component/bottom_nav.dart';
 import 'Login.dart';
+import 'home.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -14,6 +17,25 @@ class StartScreen extends StatefulWidget {
 }
 class _StartScreenState extends State<StartScreen> {
   final _controller = TextEditingController();
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser != null) {
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+      if (googleAuth != null && (googleAuth.accessToken != null || googleAuth.idToken != null)) {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        return await FirebaseAuth.instance.signInWithCredential(credential);
+      } else {
+        throw Exception("Google Sign-In failed: Missing access token or ID token.");
+      }
+    } else {
+      throw Exception("Google Sign-In failed: No user selected.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +147,20 @@ class _StartScreenState extends State<StartScreen> {
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height * 0.06,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  try {
+                    UserCredential userCredential = await signInWithGoogle();
+                    //print user info
+                    print("User Info: ${userCredential.user}");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                  } catch (e) {
+                    // Handle error, if any
+                    print("Google Sign-In Error: $e");
+                  }
+                },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(Size(0, 50)),
                   backgroundColor: MaterialStateProperty.all<Color>(Colors.white),

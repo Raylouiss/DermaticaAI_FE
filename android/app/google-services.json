@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "657369708746",
+    "project_id": "dermaticaai",
+    "storage_bucket": "dermaticaai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657369708746:android:4723aab40b9c87098d9c33",
+        "android_client_info": {
+          "package_name": "com.example.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657369708746-rb4jsqe1vea4dsesjdqd19u7uegn5ptt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firstapp",
+            "certificate_hash": "21bc2e3620cc77431ba9443474dc35cfa5f3cbb2"
+          }
+        },
+        {
+          "client_id": "657369708746-8kdsqdoran925ii5fce60h3jgntoh7d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7YHFBdmQb2uqddL4W_yWqBzBHsGVpSq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657369708746-8kdsqdoran925ii5fce60h3jgntoh7d6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
