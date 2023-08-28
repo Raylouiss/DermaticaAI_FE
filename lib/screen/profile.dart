@@ -1,6 +1,10 @@
 import 'package:firstapp/screen/how_to_use.dart';
 import 'package:firstapp/screen/support.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firstapp/screen/start.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'Login.dart';
 import 'faq.dart';
@@ -16,6 +20,10 @@ class _ProfileState extends State<Profile> {
   bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
+    final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
+    final imageUrl = userCredential?.user?.photoURL;
+    final name = userCredential?.user?.displayName;
+    final email = userCredential?.user?.email;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF5F93A0),
@@ -46,7 +54,9 @@ class _ProfileState extends State<Profile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/profile.png'),
+            Image.network(
+            imageUrl ?? 'assets/profile.png',
+          ),
             TextButton(
                 onPressed: (){
 
@@ -83,7 +93,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Row(
                         children: [
-                          Text('Raylouiss'),
+                          Text(name ?? 'Username'),
                           IconButton(
                             icon: Icon(Icons.chevron_right, size: 20),
                             onPressed: () {
@@ -108,17 +118,17 @@ class _ProfileState extends State<Profile> {
                           Text('Email'),
                         ],
                       ),
-                      // Row(
-                      //   children: [
-                      //     Text('abcd@gmail.com'),
-                      //     IconButton(
-                      //       icon: Icon(Icons.chevron_right, size: 20),
-                      //       onPressed: () {
-                      //         // Your action here
-                      //       },
-                      //     )
-                      //   ],
-                      // ),
+                      Row(
+                        children: [
+                          Text(email ?? 'Email'),
+                          IconButton(
+                            icon: Icon(Icons.chevron_right, size: 20),
+                            onPressed: () {
+                              // Your action here
+                            },
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ],
@@ -276,10 +286,14 @@ class _ProfileState extends State<Profile> {
                       Row(
                         children: [IconButton(
                           icon: Icon(Icons.chevron_right, size: 20),
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            await GoogleSignIn().signOut(); // Assuming you're using FirebaseAuth
+        
+                            // Navigate back to the start screen
+                            Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => Login()),
+                              MaterialPageRoute(builder: (context) => StartScreen()),
+                              (route) => false, // Remove all previous routes from the navigation stack
                             );
                           },
                         )

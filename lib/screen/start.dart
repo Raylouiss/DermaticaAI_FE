@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../component/bottom_nav.dart';
 import 'Login.dart';
@@ -47,6 +48,21 @@ class _StartScreenState extends State<StartScreen> {
     } else {
       throw Exception("Google Sign-In failed: No user selected.");
     }
+  }
+
+  Future<void> saveUserDataToFirestore(User user) async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Reference the "users" collection and create a new document with the user's UID
+    final userDocRef = firestoreInstance.collection("users").doc(user.uid);
+
+    final userData = {
+      "displayName": user.displayName,
+      "email": user.email,
+      "photoURL": user.photoURL,
+    };
+
+    await userDocRef.set(userData);
   }
 
   @override
@@ -165,6 +181,8 @@ class _StartScreenState extends State<StartScreen> {
                     //print user info
                     print("User Info: ${userCredential.user}");
                     Provider.of<UserCredentialProvider>(context, listen: false).setUserCredential(userCredential);
+                    // Save user data to Firestore
+                    await saveUserDataToFirestore(userCredential.user!);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Home()),
