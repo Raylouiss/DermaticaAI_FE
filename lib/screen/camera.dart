@@ -1,6 +1,12 @@
+import 'package:firstapp/screen/result.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:provider/provider.dart';
+import 'package:firstapp/screen/start.dart';
 
 class Camera extends StatefulWidget {
   final int currentTab;
@@ -62,8 +68,40 @@ class _CameraState extends State<Camera> {
     });
   }
 
+  Future<String> uploadImageToFirebase(File imageFile, String imageName) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference storageRef = storage.ref();
+      Reference imageRef = storageRef.child('images/$imageName');
+      UploadTask uploadTask = imageRef.putFile(imageFile);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      print("Image uploaded. URL: $imageUrl");
+      return imageUrl;
+    } catch (e) {
+      print("Error uploading image: $e");
+      return "";
+    }
+  }
+
+  Future<void> saveUserImageToFirestore(String imageUrl, String email) async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Reference the "images" collection and create a new document with the user's UID
+    final imageDocRef = firestoreInstance.collection("images");
+
+    final imageData = {
+      "imageUrl": imageUrl,
+      "user": email,
+    };
+
+    await imageDocRef.add(imageData);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
+    final email = userCredential?.user?.email;
     try {
       return Scaffold(
         appBar: AppBar(
@@ -139,9 +177,22 @@ class _CameraState extends State<Camera> {
               if (mounted) {
                 if (file != null) {
                   print("Picture saved to ${file.path}");
+                  File imageFile = File(file.path);
+                  uploadImageToFirebase(imageFile, file.path).then((imageUrl) {
+                    if (imageUrl != "") {
+                      print("Image uploaded to Firebase Storage. URL: $imageUrl");
+                      saveUserImageToFirestore(imageUrl, email!);
+                    } else {
+                      print("Image upload failed.");
+                    }
+                  });
                 }
               }
             });
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Result()),
+            );
           },
         ),
       );
