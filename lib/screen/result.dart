@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
 
 class Result extends StatefulWidget {
-  const Result({super.key});
+  final String inputString; // Add a parameter to accept inputString
+
+  const Result({Key? key, required this.inputString}) : super(key: key);
 
   @override
   State<Result> createState() => _ResultState();
 }
 
 class _ResultState extends State<Result> {
+  // Future<String> getUserLatestImageUrlFromFirestore(String uid) async {
+  //   final firestoreInstance = FirebaseFirestore.instance;
+  //   try {
+  //     // Query the "images" collection for documents with the given UID
+  //     final query = firestoreInstance
+  //         .collection("images")
+  //         .where("user", isEqualTo: uid)
+  //         // .orderBy("timestamp", descending: true) // Order by timestamp in descending order
+  //         .limit(1); // Limit to the latest document
+
+  //     final querySnapshot = await query.get();
+
+  //     if (querySnapshot.docs.isNotEmpty) {
+  //       // If documents are found, return the latest imageUrl
+  //       final latestDoc = querySnapshot.docs.first;
+  //       return latestDoc.get("imageUrl");
+  //     } else {
+  //       // No documents found for the given user
+  //       return "";
+  //     }
+  //   } catch (e) {
+  //     // Handle any errors
+  //     print("Error fetching user data: $e");
+  //     return "";
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
+    String inputString = widget.inputString;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF5F93A0),
@@ -29,7 +59,10 @@ class _ResultState extends State<Result> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
                 child: Container(
-                  color: Colors.grey,
+                  child: Image.network(
+                    inputString,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

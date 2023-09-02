@@ -29,15 +29,18 @@ class _CameraState extends State<Camera> {
     startCamera(0);
     super.initState();
   }
-  Future<void> pickImageFromGallery() async {
+
+  Future<String> pickImageFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       print("Image picked from gallery: ${pickedFile.path}");
-      // Use the pickedFile for your purpose (e.g., upload or display it)
+      return pickedFile.path;
     }
+    return "";
   }
+
   void startCamera(int direction) async {
     cameras = await availableCameras();
     cameraController = CameraController(cameras[direction], ResolutionPreset.high, enableAudio: false);
@@ -102,6 +105,7 @@ class _CameraState extends State<Camera> {
   Widget build(BuildContext context) {
     final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
     final email = userCredential?.user?.email;
+    String imageUrlP = "";
     try {
       return Scaffold(
         appBar: AppBar(
@@ -160,8 +164,24 @@ class _CameraState extends State<Camera> {
               child: button(Icons.flip_camera_ios_outlined, Alignment.bottomLeft),
             ),
             GestureDetector(
-              onTap: () {
-                pickImageFromGallery();
+              onTap: () async {
+                String imagePath = await pickImageFromGallery();
+                File imageFile = File(imagePath);
+                  uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
+                    if (imageUrl != "") {
+                      print("Image uploaded to Firebase Storage. URL: $imageUrl");
+                      imageUrlP = imageUrl;
+                      saveUserImageToFirestore(imageUrl, email!);
+                    } else {
+                      print("Image upload failed.");
+                    }
+                  });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Result(inputString: imageUrlP),
+                  ),
+                );
               },
               child: button(Icons.photo_library, Alignment.bottomRight),
             ),
@@ -181,6 +201,7 @@ class _CameraState extends State<Camera> {
                   uploadImageToFirebase(imageFile, file.path).then((imageUrl) {
                     if (imageUrl != "") {
                       print("Image uploaded to Firebase Storage. URL: $imageUrl");
+                      imageUrlP = imageUrl;
                       saveUserImageToFirestore(imageUrl, email!);
                     } else {
                       print("Image upload failed.");
@@ -191,7 +212,9 @@ class _CameraState extends State<Camera> {
             });
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Result()),
+              MaterialPageRoute(
+                builder: (context) => Result(inputString: imageUrlP),
+              ),
             );
           },
         ),

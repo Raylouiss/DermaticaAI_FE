@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firstapp/screen/chat.dart';
 import 'package:firstapp/screen/list_of_chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +122,7 @@ class _DashboardState extends State<Dashboard> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ListOfChat()),
+                              MaterialPageRoute(builder: (context) => Chat()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
