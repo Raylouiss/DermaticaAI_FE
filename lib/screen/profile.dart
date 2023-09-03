@@ -254,15 +254,45 @@ class _ProfileState extends State<Profile> {
                               IconButton(
                                 icon: const Icon(Icons.chevron_right, size: 20),
                                 onPressed: () async {
-                                  await GoogleSignIn().signOut();
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const StartScreen()),
-                                    (route) => false,
+                                  bool confirmed = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirm Sign Out'),
+                                        content: const Text(
+                                            'Are you sure you want to sign out?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(false); // User canceled
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(true); // User confirmed
+                                            },
+                                            child: const Text('Sign Out'),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
+
+                                  if (confirmed == true) {
+                                    // User confirmed, perform sign out
+                                    await GoogleSignIn().signOut();
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const StartScreen()),
+                                      (route) => false,
+                                    );
+                                  }
                                 },
                               )
                             ],
