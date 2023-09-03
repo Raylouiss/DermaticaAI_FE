@@ -24,11 +24,13 @@ class StartScreen extends StatefulWidget {
   @override
   State<StartScreen> createState() => _StartScreenState();
 }
+
 class _StartScreenState extends State<StartScreen> {
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       if (googleAuth.accessToken != null || googleAuth.idToken != null) {
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
@@ -37,7 +39,8 @@ class _StartScreenState extends State<StartScreen> {
 
         return await FirebaseAuth.instance.signInWithCredential(credential);
       } else {
-        throw Exception("Google Sign-In failed: Missing access token or ID token.");
+        throw Exception(
+            "Google Sign-In failed: Missing access token or ID token.");
       }
     } else {
       throw Exception("Google Sign-In failed: No user selected.");
@@ -102,7 +105,8 @@ class _StartScreenState extends State<StartScreen> {
                     UserCredential userCredential = await signInWithGoogle();
                     // print("User Info: ${userCredential.user}");
                     // ignore: use_build_context_synchronously
-                    Provider.of<UserCredentialProvider>(context, listen: false).setUserCredential(userCredential);
+                    Provider.of<UserCredentialProvider>(context, listen: false)
+                        .setUserCredential(userCredential);
                     await saveUserDataToFirestore(userCredential.user!);
                     // ignore: use_build_context_synchronously
                     Navigator.push(
@@ -114,9 +118,12 @@ class _StartScreenState extends State<StartScreen> {
                   }
                 },
                 style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all<Size>(const Size(0, 50)),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  minimumSize:
+                      MaterialStateProperty.all<Size>(const Size(0, 50)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -146,7 +153,7 @@ class _StartScreenState extends State<StartScreen> {
               ),
             ),
             const Spacer(),
-            BottomNav(),
+            const BottomNav(),
           ],
         ),
       ),
