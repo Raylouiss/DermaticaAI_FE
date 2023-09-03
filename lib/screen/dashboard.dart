@@ -24,7 +24,8 @@ class _DashboardState extends State<Dashboard> {
 
   Future<List<Map<String, dynamic>>> fetchNews() async {
     const apiKey = '2e2fc648ec25454182773362fcdd7db5';
-    const apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=$apiKey';
+    const apiUrl =
+        'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=$apiKey';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
@@ -52,328 +53,398 @@ class _DashboardState extends State<Dashboard> {
     pageController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
-    final name = userCredential!.user!.displayName;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(35),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text("Hello, $name!",
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
-                    ),),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            // ignore: avoid_types_as_parameter_names
-                            MaterialPageRoute(builder: (context) => Camera(currentTab: 4, onTabChanged: (int ) {  },)),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          backgroundColor: const Color(0xFF5F9EA0),
-                          minimumSize: Size(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.width*0.4),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.all(4),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("Skin Diseases Recognition"),
-                              ),
-                            ),
-                            const SizedBox(height: 10,),
-                            Image.asset("assets/dashboard_sdr.png"),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Chat()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20), // provide your desired value for the rounded corner
-                          ),
-                          backgroundColor: const Color(0xFF5F9EA0),
-                          minimumSize: Size(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.width*0.4),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.all(4),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("AI Chatbot"),
-                              ),
-                            ),
-                            const SizedBox(height: 10,),
-                            Image.asset("assets/dashboard_aichatbot.png"),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-        Column(
-        children: [
-          const Padding (
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child:
-            Align(
-              alignment: Alignment.centerLeft,
-              child : Text("History",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),),
-            ),
-          ),
-          const SizedBox(height: 10),
-        SizedBox(
-        height: 100,
-        child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 6,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
+    final userCredential =
+        Provider.of<UserCredentialProvider>(context).userCredential;
+    final name = userCredential!.user!.displayName?.split(' ')[0];
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
               children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+                Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Hello, ',
+                        style: const TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '$name' '!',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$index',
-                      style: const TextStyle(fontSize: 24, color: Color(0xFF5F9EA0)),
                     ),
                   ),
                 ),
-              ],
-            ),
-          );
-        },
-        ),
-        ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Trending',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 250,
-            child:
-            FutureBuilder<List<Map<String, dynamic>>>(
-              future: newsDataFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 5,
-                      color: Color(0xFF5F93A0),
-                      backgroundColor: Colors.grey,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Text('No news data available.');
-                } else {
-                  final newsData = snapshot.data!;
-
-                  // Filter articles with valid images
-                  final validArticles = newsData.where((article) {
-                    return article['urlToImage'] != null && article['urlToImage'].isNotEmpty;
-                  }).toList();
-
-                  // Shuffle and select 5 random articles
-                  validArticles.shuffle();
-                  final selectedArticles = validArticles.take(5).toList();
-
-                  return PageView.builder(
-                    controller: pageController,
-                    onPageChanged: (index) {
-                      pageNo = index;
-                      setState(() {});
-                    },
-                    itemBuilder: (_, index) {
-                      final article = selectedArticles[index % selectedArticles.length];
-                      return AnimatedBuilder(
-                        animation: pageController,
-                        builder: (ctx, child) {
-                          return child!;
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  blurRadius: 5,
-                                  offset: const Offset(0,3),
-                                )
-                              ]
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              // ignore: avoid_types_as_parameter_names
+                              MaterialPageRoute(
+                                  builder: (context) => Camera(
+                                        currentTab: 4,
+                                        // ignore: avoid_types_as_parameter_names
+                                        onTabChanged: (int) {},
+                                      )),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: const Color(0xFF5F9EA0),
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.2,
+                                MediaQuery.of(context).size.width * 0.4),
                           ),
                           child: Column(
-                            children: [
-                              if (article['urlToImage'] != null && article['urlToImage'].isNotEmpty)
-                                Container(
-                                  padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-                                  height: 150,
-                                  width: double.infinity,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.network(
-                                      article['urlToImage']!,
-                                      fit: BoxFit.cover,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Skin Diseases Recognition",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                              Flexible(
-                                child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          // ignore: deprecated_member_use
-                                          if (!await canLaunch(article['url'])) {
-                                            // ignore: deprecated_member_use
-                                            await launch(
-                                              article['url'],
-                                              forceSafariVC: false,
-                                              forceWebView: false,
-                                              headers: <String, String>{'my_header_key': 'my_header_value'},
-                                            );
-                                          } else {
-                                            // error
-                                          }
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.only(left: 12, top: 10, right: 12),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Text(
-                                                  article['title'],
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(Icons.bookmark_border),
-                                                onPressed: () {
-                                                  // TODO: Add your bookmarking logic here
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 12, top : 5),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          formatDate(DateTime.parse(article['publishedAt'])),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                              color: Colors.black
-                                          ),
-                                        ),
-                                      ),
-                                    ]
-                                ),
                               ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Image.asset("assets/dashboard_sdr.png"),
                             ],
                           ),
                         ),
-                      );
-                    },
-                    itemCount: selectedArticles.length,
-                  );
-                }
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              5,
-                  (index) => Container(
-                margin: const EdgeInsets.all(2),
-                child: Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: pageNo == index ? const Color(0xFF5F93A0) : Colors.grey,
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Chat()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20), // provide your desired value for the rounded corner
+                            ),
+                            backgroundColor: const Color(0xFF5F9EA0),
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.4,
+                                MediaQuery.of(context).size.width * 0.4),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "AI Chatbot",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Image.asset("assets/dashboard_aichatbot.png"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "History",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 150,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 6,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '$index',
+                                      style: const TextStyle(
+                                          fontSize: 24,
+                                          color: Color(0xFF5F9EA0)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Trending',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 250,
+                      child: FutureBuilder<List<Map<String, dynamic>>>(
+                        future: newsDataFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 5,
+                                color: Color(0xFF5F93A0),
+                                backgroundColor: Colors.grey,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Text('No news data available.');
+                          } else {
+                            final newsData = snapshot.data!;
+
+                            // Filter articles with valid images
+                            final validArticles = newsData.where((article) {
+                              return article['urlToImage'] != null &&
+                                  article['urlToImage'].isNotEmpty;
+                            }).toList();
+
+                            // Shuffle and select 5 random articles
+                            validArticles.shuffle();
+                            final selectedArticles =
+                                validArticles.take(5).toList();
+
+                            return PageView.builder(
+                              controller: pageController,
+                              onPageChanged: (index) {
+                                pageNo = index;
+                                setState(() {});
+                              },
+                              itemBuilder: (_, index) {
+                                final article = selectedArticles[
+                                    index % selectedArticles.length];
+                                return AnimatedBuilder(
+                                  animation: pageController,
+                                  builder: (ctx, child) {
+                                    return child!;
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(24),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                            blurRadius: 5,
+                                            offset: const Offset(0, 3),
+                                          )
+                                        ]),
+                                    child: Column(
+                                      children: [
+                                        if (article['urlToImage'] != null &&
+                                            article['urlToImage'].isNotEmpty)
+                                          Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 16, top: 16, right: 16),
+                                            height: 150,
+                                            width: double.infinity,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              child: Image.network(
+                                                article['urlToImage']!,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        Flexible(
+                                          child: Column(children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // ignore: deprecated_member_use
+                                                if (!await canLaunch(
+                                                    article['url'])) {
+                                                  // ignore: deprecated_member_use
+                                                  await launch(
+                                                    article['url'],
+                                                    forceSafariVC: false,
+                                                    forceWebView: false,
+                                                    headers: <String, String>{
+                                                      'my_header_key':
+                                                          'my_header_value'
+                                                    },
+                                                  );
+                                                } else {
+                                                  // error
+                                                }
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 12,
+                                                    top: 10,
+                                                    right: 12),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Text(
+                                                        article['title'],
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    IconButton(
+                                                      icon: const Icon(Icons
+                                                          .bookmark_border),
+                                                      onPressed: () {
+                                                        // TODO: Add your bookmarking logic here
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 12, top: 5),
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                formatDate(DateTime.parse(
+                                                    article['publishedAt'])),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 10,
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: selectedArticles.length,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        5,
+                        (index) => Container(
+                          margin: const EdgeInsets.all(2),
+                          child: Icon(
+                            Icons.circle,
+                            size: 12,
+                            color: pageNo == index
+                                ? const Color(0xFF5F93A0)
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                  ],
+                )
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-        ],
-        )
-        ],
           ),
         ),
       ),
