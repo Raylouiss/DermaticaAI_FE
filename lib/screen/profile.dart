@@ -22,252 +22,258 @@ class _ProfileState extends State<Profile> {
     final imageUrl = userCredential?.user?.photoURL;
     final name = userCredential?.user?.displayName;
     final email = userCredential?.user?.email;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF5F93A0),
-          title: const Text(
-            'Profile',
-            textAlign: TextAlign.center,
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF5F93A0),
+            title: const Text(
+              'Profile',
+              textAlign: TextAlign.center,
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
           ),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              Image.network(
-                imageUrl ?? 'assets/profile.png',
-              ),
-              Container(
-                  alignment: Alignment.centerLeft,
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Image.network(
+                  imageUrl ?? 'assets/profile.png',
+                ),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: 16, top: 30),
+                    child: const Text(
+                      'Personal',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    )),
+                Container(
+                  margin: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_username.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('Username'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(name ?? 'Username'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_email.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('Email'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(email ?? 'Email'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.only(left: 16, top: 30),
+                  alignment: Alignment.centerLeft,
                   child: const Text(
-                    'Personal',
+                    'Settings',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  )),
-              Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_username.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('Username'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(name ?? 'Username'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_email.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('Email'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(email ?? 'Email'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 16, top: 30),
-                alignment: Alignment.centerLeft,
-                child: const Text(
-                  'Settings',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_howtouse.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('How to Use'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right, size: 20),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HowToUse()),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_faq.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('FAQ'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right, size: 20),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const FAQ()),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_support.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('Support'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right, size: 20),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Support()),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/profile_logout.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('Logout'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right, size: 20),
-                              onPressed: () async {
-                                await GoogleSignIn().signOut();
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const StartScreen()),
-                                  (route) => false,
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
+                Container(
+                  margin: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_howtouse.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('How to Use'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right, size: 20),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const HowToUse()),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_faq.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('FAQ'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right, size: 20),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const FAQ()),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_support.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('Support'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right, size: 20),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Support()),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset('assets/profile_logout.png'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('Logout'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right, size: 20),
+                                onPressed: () async {
+                                  await GoogleSignIn().signOut();
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const StartScreen()),
+                                    (route) => false,
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
