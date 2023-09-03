@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/screen/start.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'Login.dart';
 import 'faq.dart';
 
 class Profile extends StatefulWidget {
@@ -26,14 +23,14 @@ class _ProfileState extends State<Profile> {
     final email = userCredential?.user?.email;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF5F93A0),
-          title: Text(
+          backgroundColor: const Color(0xFF5F93A0),
+          title: const Text(
             'Profile',
             textAlign: TextAlign.center,
           ),
           centerTitle: true,
           leading: IconButton(
-            icon: Row(
+            icon: const Row(
               children: [
                 Icon(Icons.arrow_back, color: Colors.black,),
                 Text('Back',

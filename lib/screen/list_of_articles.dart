@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'article.dart';
-
 class ListOfArticles extends StatefulWidget {
   const ListOfArticles({super.key});
 
@@ -20,8 +18,8 @@ class _ListOfArticlesState extends State<ListOfArticles> {
   int pageNo = 2;
 
   Future<List<Map<String, dynamic>>> fetchNews() async {
-    final apiKey = '2e2fc648ec25454182773362fcdd7db5';
-    final apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=$apiKey';
+    const apiKey = '2e2fc648ec25454182773362fcdd7db5';
+    const apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=$apiKey';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
@@ -53,14 +51,14 @@ class _ListOfArticlesState extends State<ListOfArticles> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF5F93A0),
-        title: Text(
+        backgroundColor: const Color(0xFF5F93A0),
+        title: const Text(
           'List Of Articles',
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Row(
+          icon: const Row(
             children: [
               Icon(Icons.arrow_back, color: Colors.black,),
               Text('Back',
@@ -80,7 +78,7 @@ class _ListOfArticlesState extends State<ListOfArticles> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
               child: Align(
                 alignment: Alignment.centerLeft,
