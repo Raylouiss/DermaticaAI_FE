@@ -170,7 +170,8 @@ class _CameraState extends State<Camera> {
                   uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
                     if (imageUrl != "") {
                       print("Image uploaded to Firebase Storage. URL: $imageUrl");
-                      imageUrlP = imageUrl;
+                      imageUrlP = imagePath;
+                      print("Image path. URL: $imageUrlP");
                       saveUserImageToFirestore(imageUrl, email!);
                     } else {
                       print("Image upload failed.");
@@ -179,7 +180,7 @@ class _CameraState extends State<Camera> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Result(inputString: imageUrlP),
+                    builder: (context) => Result(inputString: imagePath),
                   ),
                 );
               },
@@ -201,7 +202,8 @@ class _CameraState extends State<Camera> {
                   uploadImageToFirebase(imageFile, file.path).then((imageUrl) {
                     if (imageUrl != "") {
                       print("Image uploaded to Firebase Storage. URL: $imageUrl");
-                      imageUrlP = imageUrl;
+                      imageUrlP = file.path;
+                      print("Image path. URL: $imageUrlP");
                       saveUserImageToFirestore(imageUrl, email!);
                     } else {
                       print("Image upload failed.");
@@ -209,13 +211,15 @@ class _CameraState extends State<Camera> {
                   });
                 }
               }
+            if (file != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Result(inputString: file.path),
+                ),
+              );
+            }
             });
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Result(inputString: imageUrlP),
-              ),
-            );
           },
         ),
       );

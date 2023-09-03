@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
+
 class Result extends StatefulWidget {
-  final String inputString; // Add a parameter to accept inputString
+  final String inputString;
 
   const Result({Key? key, required this.inputString}) : super(key: key);
 
@@ -36,10 +39,14 @@ class _ResultState extends State<Result> {
   //     return "";
   //   }
   // }
+  Future<String> fetchImage() async {
+    await Future.delayed(Duration(seconds: 1));
+    print("widget.inputString" + widget.inputString);
+    return widget.inputString;
+  }
 
   @override
   Widget build(BuildContext context) {
-    String inputString = widget.inputString;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF5F93A0),
@@ -53,18 +60,27 @@ class _ResultState extends State<Result> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
-                child: Container(
-                  child: Image.network(
-                    inputString,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+            FutureBuilder<String>(
+              future: fetchImage(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Container(
+                    width: 300,
+                    height: 300,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Image.file(
+                        File(snapshot.data!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
             SizedBox(height: 10,),
             ClipRRect(
