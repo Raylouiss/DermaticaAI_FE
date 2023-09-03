@@ -83,7 +83,6 @@ class _ChatState extends State<Chat> {
   });
 
   if (messageText.isNotEmpty) {
-    // Show a loading indicator
     final chatbotResponse = ChatMessage(
       avatar: 'assets/htu4.png',
       message: '...',
@@ -96,7 +95,6 @@ class _ChatState extends State<Chat> {
 
     await sendQuery(messageText);
 
-    // Replace the loading indicator with the actual response
     final chatbotAnswer = ChatMessage(
       avatar: 'assets/htu4.png',
       message: _answers.isNotEmpty ? _answers.removeAt(0) : "",

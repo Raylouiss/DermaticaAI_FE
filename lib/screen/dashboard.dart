@@ -197,7 +197,7 @@ class _DashboardState extends State<Dashboard> {
                 Column(
                   children: [
                     const Padding(
-                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 10),
+                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -250,7 +250,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 10),
+                      padding: EdgeInsets.only(left: 25, top: 30, bottom: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
