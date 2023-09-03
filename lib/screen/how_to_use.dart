@@ -31,7 +31,6 @@ class _HowToUseState extends State<HowToUse> {
             Navigator.of(context).pop();
           },
         ),
-        leadingWidth: 90,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
