@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 class BottomNav extends StatelessWidget {
+  const BottomNav({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.15,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
