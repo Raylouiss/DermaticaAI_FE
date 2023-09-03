@@ -26,7 +26,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   final List<ChatMessage> _messages = [];
   final List<String> _answers = [];
-
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
 
   @override
@@ -48,6 +48,7 @@ class _ChatState extends State<Chat> {
           children: [
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: _messages.length,
                 itemBuilder: (BuildContext context, int index) {
                   final message = _messages[index];
@@ -66,28 +67,61 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void _addMessage(String messageText, bool isSentByUser, String imageUrl) {
-    // Add the user's message to the list
-    final userMessage = ChatMessage(
-      avatar: imageUrl,
-      message: messageText,
-      isSentByUser: isSentByUser,
-    );
+  void _addMessage(
+  String messageText,
+  bool isSentByUser,
+  String imageUrl,
+) async {
+  final userMessage = ChatMessage(
+    avatar: imageUrl,
+    message: messageText,
+    isSentByUser: isSentByUser,
+  );
 
-    // Add the chatbot's response to the list
+  setState(() {
+    _messages.add(userMessage);
+  });
+
+  if (messageText.isNotEmpty) {
+    // Show a loading indicator
     final chatbotResponse = ChatMessage(
       avatar: 'assets/htu4.png',
-      message: _answers.isNotEmpty ? _answers.removeAt(0) : "", // Get the next answer
+      message: '...',
       isSentByUser: false,
     );
 
     setState(() {
-      _messages.add(userMessage);
       _messages.add(chatbotResponse);
     });
 
-    // Clear the text field
+    await sendQuery(messageText);
+
+    // Replace the loading indicator with the actual response
+    final chatbotAnswer = ChatMessage(
+      avatar: 'assets/htu4.png',
+      message: _answers.isNotEmpty ? _answers.removeAt(0) : "",
+      isSentByUser: false,
+    );
+
+    setState(() {
+      _messages.remove(chatbotResponse);
+      _messages.add(chatbotAnswer);
+    });
+
     _textController.clear();
+    _scrollToBottom();
+  }
+}
+
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   Future<void> sendQuery(String query) async {
@@ -129,7 +163,7 @@ class _ChatState extends State<Chat> {
                 ),
                 child: CircleAvatar(
                   backgroundColor: Colors.blue,
-                  backgroundImage: AssetImage(avatar), // Load avatar image
+                  backgroundImage: AssetImage(avatar),
                   radius: 25,
                 ),
               )
@@ -143,12 +177,16 @@ class _ChatState extends State<Chat> {
             ),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isSentByUser ? const Color(0xFF5F9EA0) : const Color(0xFF008080),
+              color: isSentByUser
+                  ? const Color(0xFF5F9EA0)
+                  : const Color(0xFF008080),
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(30),
                 topRight: const Radius.circular(30),
-                bottomLeft: isSentByUser ? const Radius.circular(30) : Radius.zero,
-                bottomRight: !isSentByUser ? const Radius.circular(30) : Radius.zero,
+                bottomLeft:
+                    isSentByUser ? const Radius.circular(30) : Radius.zero,
+                bottomRight:
+                    !isSentByUser ? const Radius.circular(30) : Radius.zero,
               ),
             ),
             child: Text(
@@ -203,9 +241,9 @@ class _ChatState extends State<Chat> {
             onPressed: () async {
               final messageText = _textController.text;
               if (messageText.isNotEmpty) {
+                _scrollToBottom();
                 _addMessage(messageText, true, imageUrl);
                 await sendQuery(messageText);
-                _addMessage('', false, imageUrl);
               }
             },
           ),
