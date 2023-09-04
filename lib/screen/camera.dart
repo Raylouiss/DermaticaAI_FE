@@ -12,7 +12,8 @@ class Camera extends StatefulWidget {
   final int currentTab;
   final Function(int) onTabChanged;
 
-  const Camera({required this.currentTab, required this.onTabChanged, super.key});
+  const Camera(
+      {required this.currentTab, required this.onTabChanged, super.key});
 
   @override
   State<Camera> createState() => _CameraState();
@@ -35,7 +36,7 @@ class _CameraState extends State<Camera> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      print("Image picked from gallery: ${pickedFile.path}");
+      // print("Image picked from gallery: ${pickedFile.path}");
       return pickedFile.path;
     }
     return "";
@@ -43,15 +44,15 @@ class _CameraState extends State<Camera> {
 
   void startCamera(int direction) async {
     cameras = await availableCameras();
-    cameraController = CameraController(cameras[direction], ResolutionPreset.high, enableAudio: false);
+    cameraController = CameraController(
+        cameras[direction], ResolutionPreset.high,
+        enableAudio: false);
     await cameraController.initialize().then((value) {
       if (!mounted) {
         return;
       }
       setState(() {});
-    }).catchError((e) {
-      print(e);
-    });
+    }).catchError((e) {});
   }
 
   @override
@@ -79,10 +80,10 @@ class _CameraState extends State<Camera> {
       UploadTask uploadTask = imageRef.putFile(imageFile);
       TaskSnapshot taskSnapshot = await uploadTask;
       String imageUrl = await taskSnapshot.ref.getDownloadURL();
-      print("Image uploaded. URL: $imageUrl");
+      // print("Image uploaded. URL: $imageUrl");
       return imageUrl;
     } catch (e) {
-      print("Error uploading image: $e");
+      // print("Error uploading image: $e");
       return "";
     }
   }
@@ -103,27 +104,26 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    final userCredential = Provider.of<UserCredentialProvider>(context).userCredential;
+    final userCredential =
+        Provider.of<UserCredentialProvider>(context).userCredential;
     final email = userCredential?.user?.email;
+    // ignore: unused_local_variable
     String imageUrlP = "";
     try {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF5F93A0),
-          title: Text(
+          backgroundColor: const Color(0xFF5F93A0),
+          title: const Text(
             'Scanner',
             textAlign: TextAlign.center,
           ),
           centerTitle: true,
           leading: IconButton(
-            icon: Row(
+            icon: const Row(
               children: [
-                Icon(Icons.arrow_back, color: Colors.black,),
-                Text('Back',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                  ),
+                Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
                 ),
               ],
             ),
@@ -131,13 +131,12 @@ class _CameraState extends State<Camera> {
               Navigator.of(context).pop();
             },
           ),
-          leadingWidth: 90,
         ),
         body: Stack(
           children: [
             CameraPreview(cameraController),
             Center(
-              child: Container(
+              child: SizedBox(
                 width: 300,
                 height: 300,
                 child: Image.asset(
@@ -147,7 +146,7 @@ class _CameraState extends State<Camera> {
               ),
             ),
             Positioned(
-              top: 20.0,  // Adjust this value as needed
+              top: 20.0, // Adjust this value as needed
               left: 0,
               right: 0,
               child: Center(
@@ -161,64 +160,64 @@ class _CameraState extends State<Camera> {
                   startCamera(direction);
                 });
               },
-              child: button(Icons.flip_camera_ios_outlined, Alignment.bottomLeft),
+              child:
+                  button(Icons.flip_camera_ios_outlined, Alignment.bottomLeft),
             ),
-            GestureDetector(
-              onTap: () async {
-                String imagePath = await pickImageFromGallery();
-                File imageFile = File(imagePath);
+            Container(
+              alignment: Alignment.centerRight,
+              margin: const EdgeInsets.only(right: 15.0),
+              child: GestureDetector(
+                onTap: () async {
+                  String imagePath = await pickImageFromGallery();
+                  File imageFile = File(imagePath);
                   uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
                     if (imageUrl != "") {
-                      print("Image uploaded to Firebase Storage. URL: $imageUrl");
                       imageUrlP = imagePath;
-                      print("Image path. URL: $imageUrlP");
                       saveUserImageToFirestore(imageUrl, email!);
-                    } else {
-                      print("Image upload failed.");
-                    }
+                    } else {}
                   });
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Result(inputString: imagePath),
-                  ),
-                );
-              },
-              child: button(Icons.photo_library, Alignment.bottomRight),
-            ),
+                  // ignore: use_build_context_synchronously
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Result(inputString: imagePath),
+                    ),
+                  );
+                },
+                child: button(Icons.photo_library, Alignment.bottomRight),
+              ),
+            )
           ],
         ),
         bottomNavigationBar: buildBottomNavBar(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF5F9EA0),
-          child: Icon(Icons.camera_alt_rounded, color: Colors.black),
+          backgroundColor: const Color(0xFF5F9EA0),
+          child: const Icon(Icons.camera_alt_rounded, color: Colors.black),
           onPressed: () {
             cameraController.takePicture().then((XFile? file) {
               if (mounted) {
                 if (file != null) {
-                  print("Picture saved to ${file.path}");
+                  // print("Picture saved to ${file.path}");
                   File imageFile = File(file.path);
                   uploadImageToFirebase(imageFile, file.path).then((imageUrl) {
                     if (imageUrl != "") {
-                      print("Image uploaded to Firebase Storage. URL: $imageUrl");
+                      // print("Image uploaded to Firebase Storage. URL: $imageUrl");
                       imageUrlP = file.path;
-                      print("Image path. URL: $imageUrlP");
+                      // print("Image path. URL: $imageUrlP");
                       saveUserImageToFirestore(imageUrl, email!);
-                    } else {
-                      print("Image upload failed.");
-                    }
+                    } else {}
                   });
                 }
               }
-            if (file != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Result(inputString: file.path),
-                ),
-              );
-            }
+              if (file != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Result(inputString: file.path),
+                  ),
+                );
+              }
             });
           },
         ),
@@ -227,12 +226,13 @@ class _CameraState extends State<Camera> {
       return const SizedBox();
     }
   }
+
   BottomAppBar buildBottomNavBar() {
     return BottomAppBar(
-      color: Color(0xFF008080),
-      shape: CircularNotchedRectangle(),
+      color: const Color(0xFF008080),
+      shape: const CircularNotchedRectangle(),
       notchMargin: 10,
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,7 +244,7 @@ class _CameraState extends State<Camera> {
                 buildNavBarItem(Icons.history, 1),
               ],
             ),
-            Row (
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildNavBarItem(Icons.newspaper, 2),
@@ -270,7 +270,7 @@ class _CameraState extends State<Camera> {
         height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isSelected ? Color(0xFF5F9EA0) : Colors.transparent,
+          color: isSelected ? const Color(0xFF5F9EA0) : Colors.transparent,
         ),
         child: Icon(
           icon,
@@ -279,6 +279,7 @@ class _CameraState extends State<Camera> {
       ),
     );
   }
+
   Widget flashButton() {
     return GestureDetector(
       onTap: toggleFlash,
@@ -291,11 +292,10 @@ class _CameraState extends State<Camera> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,
-                offset: Offset(2,2),
+                offset: Offset(2, 2),
                 blurRadius: 10,
               )
-            ]
-        ),
+            ]),
         child: Center(
           child: Icon(
             flashMode == FlashMode.torch ? Icons.flash_on : Icons.flash_off,
@@ -305,6 +305,7 @@ class _CameraState extends State<Camera> {
       ),
     );
   }
+
   Widget button(IconData icon, Alignment alignment) {
     return Align(
       alignment: alignment,
@@ -336,4 +337,3 @@ class _CameraState extends State<Camera> {
     );
   }
 }
-
