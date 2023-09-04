@@ -240,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     SizedBox(
-                      height: 140,
+                      height: 120,
                       child: FutureBuilder<List<UserImage>>(
                         future: fetchUserImages(),
                         builder: (context, snapshot) {
@@ -332,7 +332,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                       Center(
                                         child: Text(
-                                          '${DateFormat('dd-MM-yyyy').format(DateTime.parse(userImage.timeStamp))}\n${DateFormat('HH:mm').format(DateTime.parse(userImage.timeStamp))}',
+                                          DateFormat('dd-MM-yyyy').format(DateTime.parse(userImage.timeStamp)),
                                           style: const TextStyle(fontSize: 12),
                                         ),
                                       )
