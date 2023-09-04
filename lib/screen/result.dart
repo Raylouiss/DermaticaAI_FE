@@ -6,6 +6,8 @@ import 'package:firstapp/screen/start.dart';
 import 'package:firstapp/screen/chat.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Result extends StatefulWidget {
   final String inputString;
@@ -37,14 +39,68 @@ class _ResultState extends State<Result> {
       ),
     );
 
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      return;
+    }
+
     try {
       final response = await request.send();
       if (response.statusCode == 200) {
         final responseData = await response.stream.bytesToString();
         final decodedData = json.decode(responseData);
+
+        final confidence = decodedData['confidence'];
+        final predictedClass = decodedData['predicted_class'];
+
+        String userEmail = currentUser.email!;
+        String timeStamp = DateTime.now().toIso8601String();
+        String disease = 'Disease Name';
+        String level = 'Threat Level';
+        String percentage = '${(confidence * 100).toStringAsFixed(2)}%';
+
+        if (predictedClass == 4) {
+          level = 'Danger';
+          disease = 'Melanoma';
+        } else if (predictedClass == 0 ||
+            predictedClass == 1 ||
+            predictedClass == 7) {
+          level = 'Medium';
+          if (predictedClass == 0) {
+            disease = 'Actinic Keratosis';
+          } else if (predictedClass == 1) {
+            disease = 'Basal Cell Carcinoma';
+          } else if (predictedClass == 7) {
+            disease = 'Vascular Skin Lesions';
+          }
+        } else if (predictedClass == 3 ||
+            predictedClass == 6 ||
+            predictedClass == 2) {
+          level = 'Safe';
+          if (predictedClass == 3) {
+            disease = 'Dermatofibroma';
+          } else if (predictedClass == 6) {
+            disease = 'Melanocytic Nevi';
+          } else if (predictedClass == 2) {
+            disease = 'Benign Keratosis';
+          }
+        } else if (predictedClass == 5) {
+          level = 'Zero';
+          disease = 'Normal Skin';
+        }
+
+        await saveUserDataToFirestore(
+          widget.inputString,
+          userEmail,
+          timeStamp,
+          disease,
+          level,
+          percentage,
+        );
+
         setState(() {
-          confidence = decodedData['confidence'];
-          predictedClass = decodedData['predicted_class'];
+          this.confidence = confidence;
+          this.predictedClass = predictedClass;
           isLoading = false;
         });
       } else {
@@ -57,6 +113,25 @@ class _ResultState extends State<Result> {
         isLoading = false;
       });
     }
+  }
+
+  Future<void> saveUserDataToFirestore(String imageUrl, String email,
+      String timeStamp, String disease, String level, String percentage) async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Reference the "images" collection and create a new document with the user's UID
+    final imageDocRef = firestoreInstance.collection("diseases");
+
+    final imageData = {
+      "imageUrl": imageUrl,
+      "user": email,
+      "timeStamp": timeStamp,
+      "disease": disease,
+      "level": level,
+      "percentage": percentage,
+    };
+
+    await imageDocRef.add(imageData);
   }
 
   @override
@@ -149,7 +224,11 @@ class _ResultState extends State<Result> {
         child: Column(
           children: [
             isLoading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    strokeWidth: 5,
+                    color: Color(0xFF5F93A0),
+                    backgroundColor: Colors.grey,
+                  )
                 : SizedBox(
                     width: 300,
                     height: 300,
@@ -167,7 +246,9 @@ class _ResultState extends State<Result> {
               height: 10,
             ),
             isLoading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Container(
@@ -234,7 +315,9 @@ class _ResultState extends State<Result> {
               height: 10,
             ),
             isLoading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -292,7 +375,9 @@ class _ResultState extends State<Result> {
               height: 10,
             ),
             isLoading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -338,7 +423,7 @@ class _ResultState extends State<Result> {
                                                           ? 'Normal Skin'
                                                           : predictedClass == 6
                                                               ? 'Melanocytic Nevi'
-                                                              : 'vascular Skin Lesions',
+                                                              : 'Vascular Skin Lesions',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:firstapp/screen/start.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'camera.dart';
 
@@ -21,6 +23,31 @@ class _DashboardState extends State<Dashboard> {
   late Future<List<Map<String, dynamic>>> newsDataFuture;
 
   int pageNo = 2;
+
+  Future<List<String>> fetchUserImages() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      return [];
+    }
+
+    final userEmail = currentUser.email;
+
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('images')
+              .where('user', isEqualTo: userEmail)
+              .get();
+
+      final List<String> imageUrls = querySnapshot.docs
+          .map((doc) => doc.data()['imageUrl'].toString())
+          .toList();
+
+      return imageUrls;
+    } catch (e) {
+      return []; // Return an empty list on error
+    }
+  }
 
   Future<List<Map<String, dynamic>>> fetchNews() async {
     const apiKey = '2e2fc648ec25454182773362fcdd7db5';
@@ -198,42 +225,83 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 6,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Stack(
+                      height: 120,
+                      child: FutureBuilder<List<String>>(
+                        future: fetchUserImages(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 5,
+                                color: Color(0xFF5F93A0),
+                                backgroundColor: Colors.grey,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return Column(
                               children: [
-                                Container(
-                                  width: 100,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 5,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '$index',
-                                      style: const TextStyle(
-                                          fontSize: 24,
-                                          color: Color(0xFF5F9EA0)),
+                                const Text('No history available.'),
+                                const SizedBox(height: 10),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      35), // Adjust the radius as needed
+                                  child: Container(
+                                    width: 70,
+                                    height: 70,
+                                    color: Colors.grey, // Gray container color
+                                    child: Image.asset(
+                                      'assets/htu4.png',
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                               ],
-                            ),
-                          );
+                            );
+                          } else {
+                            final List<String> imageUrls = snapshot.data!;
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: imageUrls.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Adjust the radius as needed
+                                    child: Image.network(
+                                      imageUrls[index],
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: const BoxDecoration(
+                                            color: Colors
+                                                .grey, // Display a placeholder
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.error,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
                     ),
