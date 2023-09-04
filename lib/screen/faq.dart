@@ -146,18 +146,18 @@ class _FAQState extends State<FAQ> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(isExpanded1
+                        icon: Icon(isExpanded3
                             ? Icons.expand_less
                             : Icons.expand_more),
                         onPressed: () {
                           setState(() {
-                            isExpanded1 = !isExpanded1;
+                            isExpanded3 = !isExpanded3;
                           });
                         },
                       ),
                     ],
                   ),
-                  if (isExpanded1)
+                  if (isExpanded3)
                     const Text(
                       'Dermatica is an application that can be used by anyone who wants to recognize skin diseases. Especially for those of you who are lazy to go to the doctor, you can use this application to recognize skin diseases.',
                       style: TextStyle(
@@ -191,18 +191,18 @@ class _FAQState extends State<FAQ> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(isExpanded1
+                        icon: Icon(isExpanded4
                             ? Icons.expand_less
                             : Icons.expand_more),
                         onPressed: () {
                           setState(() {
-                            isExpanded1 = !isExpanded1;
+                            isExpanded4 = !isExpanded4;
                           });
                         },
                       ),
                     ],
                   ),
-                  if (isExpanded1)
+                  if (isExpanded4)
                     const Text(
                       'Dermatica is an application that can help you to recognize skin diseases. However, this application cannot replace the role of a doctor. If you have a skin disease, you should immediately consult a doctor to get the right treatment.',
                       style: TextStyle(
