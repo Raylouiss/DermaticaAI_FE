@@ -25,6 +25,7 @@ class _CameraState extends State<Camera> {
   late CameraController cameraController;
   int direction = 0;
   FlashMode flashMode = FlashMode.off;
+  bool isProcessingImage = false;
 
   @override
   void initState() {
@@ -194,22 +195,25 @@ class _CameraState extends State<Camera> {
               margin: const EdgeInsets.only(right: 15.0),
               child: GestureDetector(
                 onTap: () async {
-                  String? imagePath =
-                      await pickImageFromGallery(); // Note the use of String? for imagePath
+                  String? imagePath = await pickImageFromGallery();
 
                   if (imagePath.isEmpty) {
-                    // User canceled image picking, do nothing
                     return;
                   }
+
+                  setState(() {
+                    isProcessingImage = true;
+                  });
 
                   File imageFile = File(imagePath);
                   uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
                     if (imageUrl != "") {
                       imageUrlP = imagePath;
                       saveUserImageToFirestore(imageUrl, email!);
-                    } else {
-                      // Handle the case where image upload failed
-                    }
+                    } else {}
+                    setState(() {
+                      isProcessingImage = false;
+                    });
                   });
 
                   // ignore: use_build_context_synchronously
@@ -222,42 +226,75 @@ class _CameraState extends State<Camera> {
                 },
                 child: button(Icons.photo_library, Alignment.bottomRight),
               ),
-            )
+            ),
+            if (isProcessingImage)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black
+                      .withOpacity(0.5), // Semi-transparent background
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
           ],
         ),
         bottomNavigationBar: buildBottomNavBar(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFF5F9EA0),
-          child: const Icon(Icons.camera_alt_rounded, color: Colors.black),
-          onPressed: () {
-            cameraController.takePicture().then((XFile? file) async {
-              if (mounted) {
-                if (file != null) {
-                  // print("Picture saved to ${file.path}");
-                  File imageFile = File(file.path);
-                  File croppedImageFile = await cropImage(imageFile);
-                  uploadImageToFirebase(croppedImageFile, croppedImageFile.path)
-                      .then((imageUrl) {
-                    if (imageUrl != "") {
-                      // print("Image uploaded to Firebase Storage. URL: $imageUrl");
-                      imageUrlP = croppedImageFile.path;
-                      // print("Image path. URL: $imageUrlP");
-                      saveUserImageToFirestore(imageUrl, email!);
-                    } else {}
-                  });
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          Result(inputString: croppedImageFile.path),
-                    ),
-                  );
+        floatingActionButton: Stack(
+          children: [
+            if (isProcessingImage)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black
+                      .withOpacity(0.5), // Semi-transparent background
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+            FloatingActionButton(
+              backgroundColor: const Color(0xFF5F9EA0),
+              child: const Icon(Icons.camera_alt_rounded, color: Colors.black),
+              onPressed: () async {
+                if (isProcessingImage) {
+                  return; // Don't allow taking a picture while processing a previous one
                 }
-              }
-            });
-          },
+                try {
+                  setState(() {
+                    isProcessingImage =
+                        true; // Set processing to true before taking the picture
+                  });
+                  final XFile file = await cameraController.takePicture();
+                  if (mounted) {
+                    File imageFile = File(file.path);
+                    File croppedImageFile = await cropImage(imageFile);
+                    final imageUrl = await uploadImageToFirebase(
+                        croppedImageFile, croppedImageFile.path);
+
+                    if (imageUrl.isNotEmpty) {
+                      imageUrlP = croppedImageFile.path;
+                      saveUserImageToFirestore(imageUrl, email!);
+                    }
+
+                    // Wait for the Result page to be ready before navigating
+                    // ignore: use_build_context_synchronously
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            Result(inputString: croppedImageFile.path),
+                      ),
+                    );
+                  }
+                } finally {
+                  setState(() {
+                    isProcessingImage = false; // Reset processing status
+                  });
+                }
+              },
+            ),
+          ],
         ),
       );
     } catch (e) {
