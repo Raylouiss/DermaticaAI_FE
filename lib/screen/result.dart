@@ -11,8 +11,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Result extends StatefulWidget {
   final String inputString;
+  final String url;
 
-  const Result({Key? key, required this.inputString}) : super(key: key);
+  const Result({Key? key, required this.inputString, required this.url}) : super(key: key);
 
   @override
   State<Result> createState() => _ResultState();
@@ -96,6 +97,7 @@ class _ResultState extends State<Result> {
           disease,
           level,
           percentage,
+          widget.url,
         );
 
         setState(() {
@@ -116,7 +118,7 @@ class _ResultState extends State<Result> {
   }
 
   Future<void> saveUserDataToFirestore(String imageUrl, String email,
-      String timeStamp, String disease, String level, String percentage) async {
+      String timeStamp, String disease, String level, String percentage, String url) async {
     final firestoreInstance = FirebaseFirestore.instance;
 
     // Reference the "images" collection and create a new document with the user's UID
@@ -129,6 +131,7 @@ class _ResultState extends State<Result> {
       "disease": disease,
       "level": level,
       "percentage": percentage,
+      "url": url,
     };
 
     await imageDocRef.add(imageData);

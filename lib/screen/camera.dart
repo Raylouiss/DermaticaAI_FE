@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
-import 'package:provider/provider.dart';
-import 'package:firstapp/screen/start.dart';
 import 'package:image/image.dart' as img;
 
 class Camera extends StatefulWidget {
@@ -90,20 +87,6 @@ class _CameraState extends State<Camera> {
     }
   }
 
-  Future<void> saveUserImageToFirestore(String imageUrl, String email) async {
-    final firestoreInstance = FirebaseFirestore.instance;
-
-    // Reference the "images" collection and create a new document with the user's UID
-    final imageDocRef = firestoreInstance.collection("images");
-
-    final imageData = {
-      "imageUrl": imageUrl,
-      "user": email,
-    };
-
-    await imageDocRef.add(imageData);
-  }
-
   Future<File> cropImage(File imageFile) async {
     try {
       img.Image image = img.decodeImage(await imageFile.readAsBytes())!;
@@ -131,9 +114,6 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    final userCredential =
-        Provider.of<UserCredentialProvider>(context).userCredential;
-    final email = userCredential?.user?.email;
     // ignore: unused_local_variable
     String imageUrlP = "";
     try {
@@ -215,21 +195,20 @@ class _CameraState extends State<Camera> {
                   File imageFile = File(imagePath);
                   uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
                     if (imageUrl != "") {
-                      imageUrlP = imagePath;
-                      saveUserImageToFirestore(imageUrl, email!);
+                      imageUrlP = imageUrl;
                     } else {}
                     setState(() {
                       isProcessingImage = false;
                     });
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            Result(inputString: imagePath, url: imageUrl),
+                      ),
+                    );
                   });
-
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Result(inputString: imagePath),
-                    ),
-                  );
                 },
                 child: button(Icons.photo_library, Alignment.bottomRight),
               ),
@@ -279,8 +258,7 @@ class _CameraState extends State<Camera> {
                         croppedImageFile, croppedImageFile.path);
 
                     if (imageUrl.isNotEmpty) {
-                      imageUrlP = croppedImageFile.path;
-                      saveUserImageToFirestore(imageUrl, email!);
+                      imageUrlP = imageUrl;
                     }
 
                     // Wait for the Result page to be ready before navigating
@@ -288,8 +266,8 @@ class _CameraState extends State<Camera> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            Result(inputString: croppedImageFile.path),
+                        builder: (context) => Result(
+                            inputString: croppedImageFile.path, url: imageUrl),
                       ),
                     );
                   }

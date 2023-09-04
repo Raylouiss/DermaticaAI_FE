@@ -18,13 +18,20 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
+class UserImage {
+  final String imageUrl;
+  final String timeStamp;
+
+  UserImage({required this.imageUrl, required this.timeStamp});
+}
+
 class _DashboardState extends State<Dashboard> {
   late final PageController pageController;
   late Future<List<Map<String, dynamic>>> newsDataFuture;
 
   int pageNo = 2;
 
-  Future<List<String>> fetchUserImages() async {
+  Future<List<UserImage>> fetchUserImages() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       return [];
@@ -35,17 +42,25 @@ class _DashboardState extends State<Dashboard> {
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await FirebaseFirestore.instance
-              .collection('images')
+              .collection('diseases')
               .where('user', isEqualTo: userEmail)
               .get();
 
-      final List<String> imageUrls = querySnapshot.docs
-          .map((doc) => doc.data()['imageUrl'].toString())
-          .toList();
+      final List<UserImage> userImages = querySnapshot.docs.map((doc) {
+        final imageUrl = doc.data()['url'].toString();
+        final timeStamp = doc.data()['timeStamp'].toString();
+        return UserImage(imageUrl: imageUrl, timeStamp: timeStamp);
+      }).toList();
 
-      return imageUrls;
+      userImages.sort((a, b) {
+        final dateTimeA = DateTime.parse(a.timeStamp);
+        final dateTimeB = DateTime.parse(b.timeStamp);
+        return dateTimeB.compareTo(dateTimeA);
+      });
+
+      return userImages;
     } catch (e) {
-      return []; // Return an empty list on error
+      return [];
     }
   }
 
@@ -225,8 +240,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     SizedBox(
-                      height: 120,
-                      child: FutureBuilder<List<String>>(
+                      height: 140,
+                      child: FutureBuilder<List<UserImage>>(
                         future: fetchUserImages(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -247,56 +262,81 @@ class _DashboardState extends State<Dashboard> {
                                 const Text('No history available.'),
                                 const SizedBox(height: 10),
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      35), // Adjust the radius as needed
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    color: Colors.grey, // Gray container color
+                                  child: SizedBox(
                                     child: Image.asset(
                                       'assets/htu4.png',
-                                      width: 70,
-                                      height: 70,
-                                      fit: BoxFit.cover,
+                                      width: 80,
+                                      height: 80,
                                     ),
                                   ),
                                 ),
                               ],
                             );
                           } else {
-                            final List<String> imageUrls = snapshot.data!;
+                            final List<UserImage> userImages = snapshot.data!;
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: imageUrls.length,
+                              itemCount: userImages.length,
                               itemBuilder: (BuildContext context, int index) {
+                                final UserImage userImage = userImages[index];
                                 return Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Adjust the radius as needed
-                                    child: Image.network(
-                                      imageUrls[index],
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          width: 100,
-                                          height: 100,
-                                          decoration: const BoxDecoration(
-                                            color: Colors
-                                                .grey, // Display a placeholder
-                                          ),
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.error,
-                                              color: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal:
+                                          8.0), // Adjust the padding as needed
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 2,
+                                              blurRadius: 5,
+                                              offset: const Offset(0, 3),
                                             ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            userImage.imageUrl,
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors
+                                                      .grey, // Display a placeholder
+                                                ),
+                                                child: const Center(
+                                                  child: Icon(
+                                                    Icons.error,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          '${DateFormat('dd-MM-yyyy').format(DateTime.parse(userImage.timeStamp))}\n${DateFormat('HH:mm').format(DateTime.parse(userImage.timeStamp))}',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 );
                               },
