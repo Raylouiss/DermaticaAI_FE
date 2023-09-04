@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:firstapp/screen/start.dart';
+import 'package:image/image.dart' as img;
 
 class Camera extends StatefulWidget {
   final int currentTab;
@@ -102,6 +103,31 @@ class _CameraState extends State<Camera> {
     await imageDocRef.add(imageData);
   }
 
+  Future<File> cropImage(File imageFile) async {
+    try {
+      img.Image image = img.decodeImage(await imageFile.readAsBytes())!;
+      int size = image.width < image.height ? image.width : image.height;
+      int x = (image.width - size + 90) ~/ 2;
+      int y = (image.height - size) ~/ 2;
+
+      img.Image croppedImage = img.copyCrop(
+        image,
+        x: x,
+        y: y,
+        width: size - 90,
+        height: size - 90,
+      );
+
+      File croppedFile =
+          File(imageFile.path.replaceAll('.jpg', '_cropped.jpg'));
+      croppedFile.writeAsBytesSync(img.encodeJpg(croppedImage));
+
+      return croppedFile;
+    } catch (e) {
+      return imageFile; // Return the original image on error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userCredential =
@@ -168,14 +194,24 @@ class _CameraState extends State<Camera> {
               margin: const EdgeInsets.only(right: 15.0),
               child: GestureDetector(
                 onTap: () async {
-                  String imagePath = await pickImageFromGallery();
+                  String? imagePath =
+                      await pickImageFromGallery(); // Note the use of String? for imagePath
+
+                  if (imagePath.isEmpty) {
+                    // User canceled image picking, do nothing
+                    return;
+                  }
+
                   File imageFile = File(imagePath);
                   uploadImageToFirebase(imageFile, imagePath).then((imageUrl) {
                     if (imageUrl != "") {
                       imageUrlP = imagePath;
                       saveUserImageToFirestore(imageUrl, email!);
-                    } else {}
+                    } else {
+                      // Handle the case where image upload failed
+                    }
                   });
+
                   // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
@@ -195,28 +231,30 @@ class _CameraState extends State<Camera> {
           backgroundColor: const Color(0xFF5F9EA0),
           child: const Icon(Icons.camera_alt_rounded, color: Colors.black),
           onPressed: () {
-            cameraController.takePicture().then((XFile? file) {
+            cameraController.takePicture().then((XFile? file) async {
               if (mounted) {
                 if (file != null) {
                   // print("Picture saved to ${file.path}");
                   File imageFile = File(file.path);
-                  uploadImageToFirebase(imageFile, file.path).then((imageUrl) {
+                  File croppedImageFile = await cropImage(imageFile);
+                  uploadImageToFirebase(croppedImageFile, croppedImageFile.path)
+                      .then((imageUrl) {
                     if (imageUrl != "") {
                       // print("Image uploaded to Firebase Storage. URL: $imageUrl");
-                      imageUrlP = file.path;
+                      imageUrlP = croppedImageFile.path;
                       // print("Image path. URL: $imageUrlP");
                       saveUserImageToFirestore(imageUrl, email!);
                     } else {}
                   });
+                  // ignore: use_build_context_synchronously
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Result(inputString: croppedImageFile.path),
+                    ),
+                  );
                 }
-              }
-              if (file != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Result(inputString: file.path),
-                  ),
-                );
               }
             });
           },
