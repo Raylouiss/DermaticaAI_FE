@@ -58,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final userCredential =
         Provider.of<UserCredentialProvider>(context).userCredential;
-    final name = userCredential!.user!.displayName?.split(' ')[0];
+    final name = userCredential!.user!.displayName!.split(' ')[0];
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -153,7 +153,7 @@ class _DashboardState extends State<Dashboard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const Chat()),
+                                  builder: (context) => Chat(name: name)),
                             );
                           },
                           style: ElevatedButton.styleFrom(

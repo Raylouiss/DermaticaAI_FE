@@ -17,7 +17,9 @@ class ChatMessage {
 }
 
 class Chat extends StatefulWidget {
-  const Chat({super.key});
+  final String name;
+
+  const Chat({Key? key, required this.name}) : super(key: key);
 
   @override
   State<Chat> createState() => _ChatState();
@@ -28,6 +30,13 @@ class _ChatState extends State<Chat> {
   final List<String> _answers = [];
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
+  bool _initialMessageSent = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _sendInitialMessage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,50 +76,71 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void _addMessage(
-  String messageText,
-  bool isSentByUser,
-  String imageUrl,
-) async {
-  final userMessage = ChatMessage(
-    avatar: imageUrl,
-    message: messageText,
-    isSentByUser: isSentByUser,
-  );
-
-  setState(() {
-    _messages.add(userMessage);
-  });
-
-  if (messageText.isNotEmpty) {
-    final chatbotResponse = ChatMessage(
-      avatar: 'assets/htu4.png',
-      message: '...',
-      isSentByUser: false,
-    );
-
-    setState(() {
-      _messages.add(chatbotResponse);
-    });
-
-    await sendQuery(messageText);
-
-    final chatbotAnswer = ChatMessage(
-      avatar: 'assets/htu4.png',
-      message: _answers.isNotEmpty ? _answers.removeAt(0) : "",
-      isSentByUser: false,
-    );
-
-    setState(() {
-      _messages.remove(chatbotResponse);
-      _messages.add(chatbotAnswer);
-    });
-
-    _textController.clear();
-    _scrollToBottom();
+  void _sendInitialMessage() {
+    const initialMessage = "";
+    _addMessage(initialMessage, false, '');
+    _initialMessageSent = true;
   }
-}
 
+  void _addMessage(
+    String messageText,
+    bool isSentByUser,
+    String imageUrl,
+  ) async {
+    if (_initialMessageSent) {
+      final userMessage = ChatMessage(
+        avatar: imageUrl,
+        message: messageText,
+        isSentByUser: isSentByUser,
+      );
+
+      setState(() {
+        _messages.add(userMessage);
+      });
+
+      if (messageText.isNotEmpty) {
+        final chatbotResponse = ChatMessage(
+          avatar: 'assets/htu4.png',
+          message: '...',
+          isSentByUser: false,
+        );
+
+        setState(() {
+          _messages.add(chatbotResponse);
+        });
+
+        await sendQuery(messageText);
+
+        final chatbotAnswer = ChatMessage(
+          avatar: 'assets/htu4.png',
+          message: _answers.isNotEmpty ? _answers.removeAt(0) : "",
+          isSentByUser: false,
+        );
+
+        setState(() {
+          _messages.remove(chatbotResponse);
+          _messages.add(chatbotAnswer);
+        });
+
+        _textController.clear();
+        _scrollToBottom();
+      }
+    } else {
+      String name = widget.name;
+      final chatbotResponse = ChatMessage(
+        avatar: 'assets/htu4.png',
+        message: 'Hi $name! My name is Michie. How can I help you?',
+        isSentByUser: isSentByUser,
+      );
+
+      setState(() {
+        _messages.add(chatbotResponse);
+      });
+
+      _textController.clear();
+      _scrollToBottom();
+    }
+  }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
