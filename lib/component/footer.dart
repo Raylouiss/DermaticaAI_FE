@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Beranda extends StatefulWidget {
@@ -13,17 +12,17 @@ class _BerandaState extends State<Beranda> {
 
   // Create a list of pages that will be displayed when a navigation item is tapped
   final List<Widget> _pages = [
-    BerandaPage(),
-    HistoryPage(),
-    BeritaPage(),
-    ProfilPage(),
+    const BerandaPage(),
+    const HistoryPage(),
+    const BeritaPage(),
+    const ProfilPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your App Title'),
+        title: const Text('Your App Title'),
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -58,36 +57,44 @@ class _BerandaState extends State<Beranda> {
 
 // Replace these classes with your actual page implementations
 class BerandaPage extends StatelessWidget {
+  const BerandaPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Beranda Page'),
     );
   }
 }
 
 class HistoryPage extends StatelessWidget {
+  const HistoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('History Page'),
     );
   }
 }
 
 class BeritaPage extends StatelessWidget {
+  const BeritaPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Berita Page'),
     );
   }
 }
 
 class ProfilPage extends StatelessWidget {
+  const ProfilPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Profil Page'),
     );
   }
