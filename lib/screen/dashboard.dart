@@ -103,13 +103,13 @@ class _DashboardState extends State<Dashboard> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              // ignore: avoid_types_as_parameter_names
                               MaterialPageRoute(
-                                  builder: (context) => Camera(
-                                        currentTab: 4,
-                                        // ignore: avoid_types_as_parameter_names
-                                        onTabChanged: (int) {},
-                                      )),
+                                builder: (context) => Camera(
+                                  currentTab: 4,
+                                  // ignore: avoid_types_as_parameter_names
+                                  onTabChanged: (int) {},
+                                ),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -117,19 +117,16 @@ class _DashboardState extends State<Dashboard> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             backgroundColor: const Color(0xFF5F9EA0),
-                            minimumSize: Size(
-                                MediaQuery.of(context).size.width * 0.2,
-                                MediaQuery.of(context).size.width * 0.4),
+                            minimumSize: const Size(230, 230),
                           ),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               const Padding(
-                                padding: EdgeInsets.all(4),
+                                padding: EdgeInsets.only(bottom: 40),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    "Skin Diseases Recognition",
+                                    "Skin Disease Recognition",
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -137,9 +134,6 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 5,
                               ),
                               Image.asset("assets/dashboard_sdr.png"),
                             ],
@@ -153,24 +147,21 @@ class _DashboardState extends State<Dashboard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Chat(name: name)),
+                                builder: (context) => Chat(name: name),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20), // provide your desired value for the rounded corner
+                              borderRadius: BorderRadius.circular(20),
                             ),
                             backgroundColor: const Color(0xFF5F9EA0),
-                            minimumSize: Size(
-                                MediaQuery.of(context).size.width * 0.4,
-                                MediaQuery.of(context).size.width * 0.4),
+                            minimumSize: const Size(230, 230),
                           ),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               const Padding(
-                                padding: EdgeInsets.all(4),
+                                padding: EdgeInsets.only(bottom: 10),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
@@ -182,9 +173,6 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 3,
                               ),
                               Image.asset("assets/dashboard_aichatbot.png"),
                             ],

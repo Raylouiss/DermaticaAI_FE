@@ -258,12 +258,11 @@ class _CameraState extends State<Camera> {
               child: const Icon(Icons.camera_alt_rounded, color: Colors.black),
               onPressed: () async {
                 if (isProcessingImage) {
-                  return; // Don't allow taking a picture while processing a previous one
+                  return;
                 }
                 try {
                   setState(() {
-                    isProcessingImage =
-                        true; // Set processing to true before taking the picture
+                    isProcessingImage = true;
                   });
                   final XFile file = await cameraController.takePicture();
                   if (mounted) {
