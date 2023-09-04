@@ -1,7 +1,8 @@
 import 'dart:io';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firstapp/screen/start.dart';
+import 'package:firstapp/screen/chat.dart';
 
 class Result extends StatefulWidget {
   final String inputString;
@@ -40,196 +41,232 @@ class _ResultState extends State<Result> {
   //   }
   // }
   Future<String> fetchImage() async {
-    await Future.delayed(Duration(seconds: 1));
-    print("widget.inputString" + widget.inputString);
+    await Future.delayed(const Duration(seconds: 1));
     return widget.inputString;
   }
 
   @override
   Widget build(BuildContext context) {
+    final userCredential =
+        Provider.of<UserCredentialProvider>(context).userCredential;
+    final name = userCredential!.user!.displayName!.split(' ')[0];
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF5F93A0),
-        title: const Text(
-          'Result',
-          textAlign: TextAlign.center,
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            FutureBuilder<String>(
-              future: fetchImage(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Container(
-                    width: 300,
-                    height: 300,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Image.file(
-                        File(snapshot.data!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                }
-              },
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF5F93A0),
+          title: const Text(
+            'Result',
+            textAlign: TextAlign.center,
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Row(
+              children: [
+                Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+              ],
             ),
-            SizedBox(height: 10,),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.2,
-                color: Color(0xFFFF8F8F), // ganti warna
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.08,
-                        height: double.infinity,
-                        color: Color(0xFFFA1111), // ganti warna
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      padding: const EdgeInsets.only(
-                        top: 25,
-                        left: 10,
-                      ),
-                      width: MediaQuery.of(context).size.width*0.5,
-                      child: const Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text('Danger ', // ganti status
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold
-                              ),),
-                              Text('Threat Level',
-                              style: TextStyle(
-                                fontSize: 10,
-                              ),)
-                            ],
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              FutureBuilder<String>(
+                future: fetchImage(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.file(
+                            File(snapshot.data!),
+                            fit: BoxFit.cover,
                           ),
-                          SizedBox(height: 10),
-                          Text('Recommended immediate consultation with a doctor', // ganti desc
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),),
-                        ],
+                        ),
                       ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  color: const Color(0xFFFF8F8F), // ganti warna
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.08,
+                          height: double.infinity,
+                          color: const Color(0xFFFA1111), // ganti warna
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 25,
+                          left: 10,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: const Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Danger ', // ganti status
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Threat Level',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Recommended immediate consultation with a doctor', // ganti desc
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Image.asset(
+                          'assets/res_danger.png') // tinggal ganti gambar
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 3),
                     ),
-                    Image.asset('assets/res_danger.png') // tinggal ganti gambar
                   ],
                 ),
-              ),
-            ),
-            SizedBox(height: 10,),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns the button to the right
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset('assets/res_consult.png'),
-                          SizedBox(width: 10,),
-                          Text('Consult with Michie',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceBetween, // Aligns the button to the right
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/res_consult.png'),
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.chevron_right, size: 20),
-                        onPressed: () {
-                          // Your action here
-                        },
-                      )
-                    ],
+                            const Text(
+                              'Consult with Michie',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.chevron_right, size: 20),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Chat(name: name)),
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 10,),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+              const SizedBox(
+                height: 10,
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns the button to the right
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset('assets/res_danger_icon.png'),
-                          SizedBox(width: 10,),
-                          Text('Acne Vulgaris',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceBetween, // Aligns the button to the right
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/res_danger_icon.png'),
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('98%'),
-                          IconButton(
-                            icon: Icon(Icons.chevron_right, size: 20),
-                            onPressed: () {
-                              // Your action here
-                            },
-                          )
-                        ],
-                      )
-                    ],
+                            const Text(
+                              'Acne Vulgaris',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('98%'),
+                            IconButton(
+                              icon: const Icon(Icons.chevron_right, size: 20),
+                              onPressed: () {
+                                // Your action here
+                              },
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      )
-    );
+              )
+            ],
+          ),
+        ));
   }
 }
