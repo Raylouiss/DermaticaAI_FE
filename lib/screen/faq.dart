@@ -135,32 +135,36 @@ class _FAQState extends State<FAQ> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Who should use Dermatica?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      const Flexible(
+                        child: Text(
+                          'Who should use Dermatica?',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          overflow: TextOverflow.visible,
                         ),
                       ),
                       IconButton(
-                        icon: Icon(isExpanded3
+                        icon: Icon(isExpanded1
                             ? Icons.expand_less
                             : Icons.expand_more),
                         onPressed: () {
                           setState(() {
-                            isExpanded3 = !isExpanded3;
+                            isExpanded1 = !isExpanded1;
                           });
                         },
                       ),
                     ],
                   ),
-                  if (isExpanded3)
+                  if (isExpanded1)
                     const Text(
-                        'Dermatica is an application that can be used by anyone who wants to recognize skin diseases. Especially for those of you who are lazy to go to the doctor, you can use this application to recognize skin diseases.',
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                        textAlign: TextAlign.justify),
+                      'Dermatica is an application that can be used by anyone who wants to recognize skin diseases. Especially for those of you who are lazy to go to the doctor, you can use this application to recognize skin diseases.',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
                 ],
               ),
             ),
@@ -176,32 +180,36 @@ class _FAQState extends State<FAQ> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Does Dermatica replace the doctor?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      const Flexible(
+                        child: Text(
+                          'Does Dermatica replace the doctor?',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          overflow: TextOverflow.visible,
                         ),
                       ),
                       IconButton(
-                        icon: Icon(isExpanded4
+                        icon: Icon(isExpanded1
                             ? Icons.expand_less
                             : Icons.expand_more),
                         onPressed: () {
                           setState(() {
-                            isExpanded4 = !isExpanded4;
+                            isExpanded1 = !isExpanded1;
                           });
                         },
                       ),
                     ],
                   ),
-                  if (isExpanded4)
+                  if (isExpanded1)
                     const Text(
-                        'Dermatica is an application that can help you to recognize skin diseases. However, this application cannot replace the role of a doctor. If you have a skin disease, you should immediately consult a doctor to get the right treatment.',
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                        textAlign: TextAlign.justify),
+                      'Dermatica is an application that can help you to recognize skin diseases. However, this application cannot replace the role of a doctor. If you have a skin disease, you should immediately consult a doctor to get the right treatment.',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
                 ],
               ),
             ),

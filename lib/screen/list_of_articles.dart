@@ -189,13 +189,6 @@ class _ListOfArticlesState extends State<ListOfArticles> {
                                                     ),
                                                   ),
                                                 ),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                      Icons.bookmark_border),
-                                                  onPressed: () {
-                                                    // TODO: Add your bookmarking logic here
-                                                  },
-                                                ),
                                               ],
                                             ),
                                           ),

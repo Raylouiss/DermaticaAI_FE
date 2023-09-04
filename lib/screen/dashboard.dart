@@ -370,13 +370,6 @@ class _DashboardState extends State<Dashboard> {
                                                         ),
                                                       ),
                                                     ),
-                                                    IconButton(
-                                                      icon: const Icon(Icons
-                                                          .bookmark_border),
-                                                      onPressed: () {
-                                                        // TODO: Add your bookmarking logic here
-                                                      },
-                                                    ),
                                                   ],
                                                 ),
                                               ),

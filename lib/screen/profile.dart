@@ -81,10 +81,13 @@ class _ProfileState extends State<Profile> {
                               const Text('Username'),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(name ?? 'Username'),
-                            ],
+                          SizedBox(
+                            width: 180,
+                            child: Text(
+                              name ?? 'Username',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -104,10 +107,13 @@ class _ProfileState extends State<Profile> {
                               const Text('Email'),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(email ?? 'Email'),
-                            ],
+                          SizedBox(
+                            width: 180,
+                            child: Text(
+                              email ?? 'Email',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
