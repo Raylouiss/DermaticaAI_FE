@@ -19,7 +19,7 @@ class UserCredentialProvider extends ChangeNotifier {
 }
 
 class StartScreen extends StatefulWidget {
-  const StartScreen({super.key});
+  const StartScreen({Key? key}) : super(key: key);
 
   @override
   State<StartScreen> createState() => _StartScreenState();
@@ -62,6 +62,8 @@ class _StartScreenState extends State<StartScreen> {
     await userDocRef.set(userData);
   }
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,58 +101,77 @@ class _StartScreenState extends State<StartScreen> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height * 0.06,
-              child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    UserCredential userCredential = await signInWithGoogle();
-                    // print("User Info: ${userCredential.user}");
-                    // ignore: use_build_context_synchronously
-                    Provider.of<UserCredentialProvider>(context, listen: false)
-                        .setUserCredential(userCredential);
-                    await saveUserDataToFirestore(userCredential.user!);
-                    // ignore: use_build_context_synchronously
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Home()),
-                    );
-                  } catch (e) {
-                    // error
-                  }
-                },
-                style: ButtonStyle(
-                  minimumSize:
-                      MaterialStateProperty.all<Size>(const Size(0, 50)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.03,
-                      child: Image.asset('assets/google_logo.png'),
-                    ),
-                    const SizedBox(width: 10),
-                    const Flexible(
-                      child: Text(
-                        'Sign in with Google',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                  : ElevatedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                UserCredential userCredential =
+                                    await signInWithGoogle();
+                                // print("User Info: ${userCredential.user}");
+                                // ignore: use_build_context_synchronously
+                                Provider.of<UserCredentialProvider>(context,
+                                        listen: false)
+                                    .setUserCredential(userCredential);
+                                await saveUserDataToFirestore(
+                                    userCredential.user!);
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Home()),
+                                );
+                              } catch (e) {
+                                // Handle error here
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(const Size(0, 50)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.03,
+                            child: Image.asset('assets/google_logo.png'),
+                          ),
+                          const SizedBox(width: 10),
+                          const Flexible(
+                            child: Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15.0,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
             ),
             const Spacer(),
             const BottomNav(),

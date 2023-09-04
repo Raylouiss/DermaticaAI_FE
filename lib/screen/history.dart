@@ -57,7 +57,6 @@ class _HistoryState extends State<History> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(15.0),
-                                child: Image.asset('assets/logo_kelompok.png'),
                               ),
                               const SizedBox(width: 10),
                               Column(

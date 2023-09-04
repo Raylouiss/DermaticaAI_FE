@@ -161,7 +161,14 @@ class _CameraState extends State<Camera> {
         ),
         body: Stack(
           children: [
-            CameraPreview(cameraController),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.black, // You can set the background color here
+              ),
+              child: CameraPreview(cameraController),
+            ),
             Center(
               child: SizedBox(
                 width: 300,

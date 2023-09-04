@@ -140,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
